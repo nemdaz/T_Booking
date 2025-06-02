@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "caps": [
+    {
+      "type": "text",
+      "name": "appium:automationName",
+      "value": "UiAutomator2"
+    },
+    {
+      "type": "text",
+      "name": "appium:udid",
+      "value": "HA1M6XDH"
+    },
+    {
+      "type": "text",
+      "name": "appium:deviceName",
+      "value": "Xiaomi"
+    },
+    {
+      "type": "text",
+      "name": "appium:platformName",
+      "value": "Android"
+    },
+    {
+      "type": "text",
+      "name": "appium:platformVersion",
+      "value": "13.0.0"
+    },
+    {
+      "type": "text",
+      "name": "appium:appPackage",
+      "value": "com.booking"
+    },
+    {
+      "type": "text",
+      "name": "appium:appActivity",
+      "value": "com.booking.appindex.presentation.activity.SearchActivity"
+    },
+    {
+      "type": "boolean",
+      "name": "appium:autoGrantPermissions",
+      "value": false
+    }
+  ],
+  "server": {
+    "local": {},
+    "remote": {
+      "hostname": "127.0.0.1",
+      "port": "4723",
+      "path": ""
+    },
+    "sauce": {
+      "dataCenter": "us-west-1"
+    },
+    "headspin": {},
+    "browserstack": {},
+    "lambdatest": {},
+    "advanced": {
+      "allowUnauthorized": true
+    },
+    "bitbar": {},
+    "kobiton": {},
+    "perfecto": {},
+    "pcloudy": {},
+    "testingbot": {},
+    "experitest": {},
+    "roboticmobi": {}
+  },
+  "serverType": "remote",
+  "visibleProviders": []
+}
