@@ -1,11 +1,8 @@
 package base;
 
 import java.net.URL;
-import java.util.Locale;
-
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
@@ -13,55 +10,54 @@ import io.appium.java_client.service.local.AppiumServiceBuilder;
 public class BaseAppium {
 
 	public static AppiumDriverLocalService aservice;
-	//public static AppiumDriver adriver;
+	// public static AppiumDriver adriver;
 	public static AndroidDriver adriver;
 	protected DesiredCapabilities cap;
 	protected String IP;
 	protected Integer PORT;
 
-	public BaseAppium() {		
+	public BaseAppium() {
 		IP = "127.0.0.1";
 		PORT = 4723;
 		//
 		cap = new DesiredCapabilities();
-		cap.setCapability("automationName", "UiAutomator2");
-		cap.setCapability("udid", "a58c4cdf");
-		//cap.setCapability("udid", "HA1M6XDH"); 
-		cap.setCapability("deviceName", "Xiaomi");
 		cap.setCapability("platformName", "Android");
-		cap.setCapability("platformVersion", "13.0.0");
-		cap.setCapability("appPackage", "com.booking");
-		cap.setCapability("appActivity", "com.booking.appindex.presentation.activity.SearchActivity");
-		cap.setCapability("ignoreHiddenApiPolicyError", true);
+		cap.setCapability("appium:automationName", "UiAutomator2");
+		cap.setCapability("appium:udid", "ZY22GM3QXD"); // Check your device ID with 'adb devices'
+		cap.setCapability("appium:deviceName", "SmartphoneTest");
+		cap.setCapability("appium:platformVersion", "14.0.0");
+		cap.setCapability("appium:appPackage", "com.booking");
+		cap.setCapability("appium:appActivity", "com.booking.startup.HomeActivity");
+		cap.setCapability("appium:ignoreHiddenApiPolicyError", true);
 		// -- Enable Keyboard
-		cap.setCapability("unicodeKeyboard", false); //If false enable show keyboard
-		cap.setCapability("resetKeyboard", false); //If false enable show keyboard
+		cap.setCapability("appium:unicodeKeyboard", false); // If false enable show keyboard
+		cap.setCapability("appium:resetKeyboard", false); // If false enable show keyboard
 	}
-	
-	//START SERVER
+
+	// START SERVER
 	public void startService() {
 
 		try {
 			// Service
-			AppiumServiceBuilder abuilder = new AppiumServiceBuilder()//.withCapabilities(cap)
+			AppiumServiceBuilder abuilder = new AppiumServiceBuilder()// .withCapabilities(cap)
 					.withIPAddress(IP).usingPort(PORT);
 			aservice = abuilder.build();
 			aservice.start();
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.out.println("No se puede inciar el servicio");
 		}
 	}
 
-	//START SERVICE
+	// START SERVICE
 	public void startDriver() {
 
-		try {		
+		try {
 			// Driver
-			//adriver = new AppiumDriver(new URL("http://" + IP + ":" + PORT), cap);
+			// adriver = new AppiumDriver(new URL("http://" + IP + ":" + PORT), cap);
 			adriver = new AndroidDriver(new URL("http://" + IP + ":" + PORT), cap);
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.out.println("No nos podemos conectar al servicio");

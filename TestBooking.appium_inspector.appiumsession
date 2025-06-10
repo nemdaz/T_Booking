@@ -3,28 +3,28 @@
   "caps": [
     {
       "type": "text",
+      "name": "platformName",
+      "value": "Android"
+    },
+    {
+      "type": "text",
       "name": "appium:automationName",
       "value": "UiAutomator2"
     },
     {
       "type": "text",
       "name": "appium:udid",
-      "value": "HA1M6XDH"
+      "value": "ZY22GM3QXD"
     },
     {
       "type": "text",
       "name": "appium:deviceName",
-      "value": "Xiaomi"
-    },
-    {
-      "type": "text",
-      "name": "appium:platformName",
-      "value": "Android"
+      "value": "SmartphoneTest"
     },
     {
       "type": "text",
       "name": "appium:platformVersion",
-      "value": "13.0.0"
+      "value": "14.0.0"
     },
     {
       "type": "text",
@@ -34,7 +34,7 @@
     {
       "type": "text",
       "name": "appium:appActivity",
-      "value": "com.booking.appindex.presentation.activity.SearchActivity"
+      "value": "com.booking.startup.HomeActivity"
     },
     {
       "type": "boolean",
@@ -47,7 +47,11 @@
     "remote": {
       "hostname": "127.0.0.1",
       "port": "4723",
-      "path": ""
+      "path": "",
+      "host": "127.0.0.1"
+    },
+    "advanced": {
+      "allowUnauthorized": true
     },
     "sauce": {
       "dataCenter": "us-west-1"
@@ -55,16 +59,17 @@
     "headspin": {},
     "browserstack": {},
     "lambdatest": {},
-    "advanced": {
-      "allowUnauthorized": true
-    },
+    "testingbot": {},
+    "experitest": {},
+    "roboticmobi": {},
+    "remotetestkit": {},
     "bitbar": {},
     "kobiton": {},
     "perfecto": {},
     "pcloudy": {},
-    "testingbot": {},
-    "experitest": {},
-    "roboticmobi": {}
+    "mobitru": {},
+    "tvlabs": {},
+    "testcribe": {}
   },
   "serverType": "remote",
   "visibleProviders": []
