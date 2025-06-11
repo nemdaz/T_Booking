@@ -1,16 +1,9 @@
 package po;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import base.BaseAppium;
 import io.appium.java_client.AppiumBy;
 import utils.Utility;
@@ -52,12 +45,12 @@ public class BuscarHotelPage extends BaseAppium {
 		this.cantHabitacion = cantHabitacion;
 		this.cantAdultos = cantAdultos;
 	}
-	
+
 	public BuscarHotelPage(List<Integer> ninosEdad) {
 		super();
 		this.ninosEdad = ninosEdad;
 	}
-	
+
 	public BuscarHotelPage() {
 		super();
 	}
@@ -89,25 +82,25 @@ public class BuscarHotelPage extends BaseAppium {
 		Date dateCheckin = Utility.dateFromString(this.fecIngreso, iF);
 		String checkin = Utility.dateChangeFormat(this.fecIngreso, iF, sF);
 		String checkout = Utility.dateChangeFormat(this.fecSalida, iF, sF);
-		
+
 		long difIni = Utility.dateDiferenceDays(Utility.dateFromString(this.fecIngreso, iF), new Date());
-		if( difIni < 0) {
+		if (difIni < 0) {
 			dateCheckin = Utility.dateAddDays(dateCheckin, Math.abs(difIni));
 			System.out.printf("La fecha de Ingreso es menor a la actual, se cambia ... %s\n", dateCheckin);
 			checkin = Utility.dateToString(dateCheckin, sF);
 		}
-		
+
 		// Action
 		UtilDriver.waitUntilVisible("com.booking:id/calendar_month_list", 5);
-		
+
 		WebElement calendarioContainer = adriver.findElement(AppiumBy.id("com.booking:id/calendar_month_list"));
-		
+
 		WebElement fechaMesI = calendarioContainer
-				.findElement(AppiumBy.xpath("//android.view.View[@content-desc=\"" + checkin + "\"]"));		
+				.findElement(AppiumBy.xpath("//android.view.View[@content-desc=\"" + checkin + "\"]"));
 		WebElement fechaMesF = calendarioContainer
 				.findElement(AppiumBy.xpath("//android.view.View[@content-desc=\"" + checkout + "\"]"));
-		
-		fechaMesI.click();		
+
+		fechaMesI.click();
 		fechaMesF.click();
 
 		UtilDelay.coolDelay(1 * 1000);
@@ -121,7 +114,7 @@ public class BuscarHotelPage extends BaseAppium {
 		desLbl.click();
 
 		// Action: Habitacion
-		UtilDelay.coolDelay(1*1000);
+		UtilDelay.coolDelay(1 * 1000);
 		WebElement containerHab = adriver.findElement(AppiumBy.id("com.booking:id/group_config_rooms_count"));
 		WebElement cantHab = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
 		WebElement cantHabAdd = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
@@ -149,7 +142,8 @@ public class BuscarHotelPage extends BaseAppium {
 		WebElement containerAdult = adriver.findElement(AppiumBy.id("com.booking:id/group_config_adults_count"));
 		WebElement cantAdu = containerAdult.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
 		WebElement cantAduAdd = containerAdult.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
-		WebElement cantAduRem = containerAdult.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_remove_button"));
+		WebElement cantAduRem = containerAdult
+				.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_remove_button"));
 
 		System.out.println("Cantidad Adu: " + cantAdu.getText());
 
@@ -171,14 +165,16 @@ public class BuscarHotelPage extends BaseAppium {
 		}
 
 	}
-	
+
 	public void seleccionaCantidadNinos() {
 		// Action: Ninos
 		WebElement containerNinos = adriver.findElement(AppiumBy.id("com.booking:id/group_config_children_count"));
 		WebElement cantNinos = containerNinos.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
-		WebElement cantNinosAdd = containerNinos.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
-		WebElement cantNinosRem = containerNinos.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_remove_button"));
-		
+		WebElement cantNinosAdd = containerNinos
+				.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
+		WebElement cantNinosRem = containerNinos
+				.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_remove_button"));
+
 		System.out.println("Cantidad Ninos: " + cantNinos.getText());
 
 		int _cantNinos = Integer.parseInt(cantNinos.getText());
@@ -187,7 +183,7 @@ public class BuscarHotelPage extends BaseAppium {
 		while (_cantNinos != this.ninosEdad.size() && intentoClickN < 20) {
 			if (_cantNinos < this.ninosEdad.size()) {
 				cantNinosAdd.click();
-				//System.out.println("Cantidad : Add" + cantNinos.getText());
+				// System.out.println("Cantidad : Add" + cantNinos.getText());
 				this.seleccionaEdadNinos(this.ninosEdad.get(intentoClickN - 1));
 			}
 			if (_cantNinos > this.ninosEdad.size()) {
@@ -199,32 +195,32 @@ public class BuscarHotelPage extends BaseAppium {
 			_cantNinos = Integer.parseInt(cantNinos.getText());
 			intentoClickN++;
 		}
-		
+
 		// APLICAR CANTIDADES
 		UtilDelay.coolDelay(2000);
 		WebElement aplicarCantidades = adriver.findElement(AppiumBy.id("com.booking:id/group_config_apply_button"));
-		aplicarCantidades.click();		
+		aplicarCantidades.click();
 	}
-	
+
 	public void seleccionaEdadNinos(int edad) {
-		
+
 		UtilDriver.waitUntilVisible("com.booking:id/age_picker_view", 5);
 		WebElement agePanel = adriver.findElement(AppiumBy.id("android:id/parentPanel"));
 		WebElement ageSelected = agePanel.findElement(AppiumBy.id("android:id/numberpicker_input"));
 		WebElement ageDown = agePanel.findElement(AppiumBy.xpath("//android.widget.Button[2]"));
 		WebElement ageOK = agePanel.findElement(AppiumBy.id("android:id/button1"));
 		WebElement ageNO = agePanel.findElement(AppiumBy.id("android:id/button2"));
-		
+
 		int maxIntent = 1;
-		while(!ageSelected.getText().contains(String.valueOf(edad)) && maxIntent < 20) {
+		while (!ageSelected.getText().contains(String.valueOf(edad)) && maxIntent < 20) {
 			System.out.println("Escogiendo edad ...");
 			ageDown.click();
 			ageSelected = agePanel.findElement(AppiumBy.id("android:id/numberpicker_input"));
 			maxIntent++;
-			
+
 		}
-		
-		if(ageSelected.getText().contains(String.valueOf(edad))) {
+
+		if (ageSelected.getText().contains(String.valueOf(edad))) {
 			ageOK.click();
 			System.out.println("Edad OK");
 		} else {
@@ -232,7 +228,7 @@ public class BuscarHotelPage extends BaseAppium {
 			System.out.println("Edad CANCEL");
 		}
 	}
-	
+
 	public void buscamosHoteles() {
 		WebElement btnBuscar = adriver.findElement(AppiumBy.id("com.booking:id/facet_search_box_cta"));
 		btnBuscar.click();

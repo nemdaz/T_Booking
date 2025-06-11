@@ -19,41 +19,40 @@ public class TerminaReservaPage extends BaseAppium {
 		this.cardExpira = cardExpira;
 		this.cardCVC = cardCVC;
 	}
-	
+
 	public TerminaReservaPage() {
-		// TODO Auto-generated constructor stub
 	}
-	
-	
+
 	public void ingresamosDatosTarjeta() {
 		System.out.println("Ingresamos los datos de la Tarjeta");
-		//Numero
+		// Numero
 		WebElement numeroEle = adriver.findElement(AppiumBy.id("com.booking:id/new_credit_card_number_edit"));
-		numeroEle.click(); //Open keyboard
+		numeroEle.click(); // Open keyboard
 		new Actions(adriver).sendKeys(this.cardNumber).perform();
-		
-		//Propietario
+
+		// Propietario
 		WebElement propietarioEle = adriver.findElement(AppiumBy.id("com.booking:id/new_credit_card_holder_edit"));
-		propietarioEle.click(); //Open keyboard
+		propietarioEle.click(); // Open keyboard
 		propietarioEle.clear();
 		new Actions(adriver).sendKeys(this.cardPropietario).perform();
-		
-		//Fecha Caducidad
+
+		// Fecha Caducidad
 		WebElement fechaCaducaEle = adriver.findElement(AppiumBy.id("com.booking:id/new_credit_card_expiry_date_edit"));
-		fechaCaducaEle.click(); //Open keyboard
+		fechaCaducaEle.click(); // Open keyboard
 		new Actions(adriver).sendKeys(this.cardExpira).perform();
-		
-		//CVC
+
+		// CVC
 		WebElement cvcEle = adriver.findElement(AppiumBy.id("com.booking:id/new_credit_card_cvc_edit_text"));
-		cvcEle.click(); //Open keyboard
+		cvcEle.click(); // Open keyboard
 		new Actions(adriver).sendKeys(this.cardCVC).perform();
-		
+
 	}
-	
+
 	public void terminamosReserva(String btnTexto) {
-		WebElement infoContainer = adriver.findElement(AppiumBy.id("com.booking:id/informative_click_to_action_container"));
+		WebElement infoContainer = adriver
+				.findElement(AppiumBy.id("com.booking:id/informative_click_to_action_container"));
 		WebElement nextAction = infoContainer.findElement(AppiumBy.id("com.booking:id/action_button"));
-		if(nextAction.getText().trim().contains(btnTexto) || btnTexto.contains(nextAction.getText().trim())) {
+		if (nextAction.getText().trim().contains(btnTexto) || btnTexto.contains(nextAction.getText().trim())) {
 			nextAction.click();
 		}
 	}
