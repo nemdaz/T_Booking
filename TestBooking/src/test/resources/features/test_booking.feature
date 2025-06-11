@@ -1,42 +1,30 @@
-Feature: Realizar reserva de habitación en Booking.com.
-  La reserva se reaiza para la ciudad Cusco.
+Feature: Reserva de habitación exitosa en Booking.com
+  Quiero realizar una reserva completa de habitación.
 
-  Scenario: Buscamos hotel.
-    Given Iniciamos la aplicación en la patalla de búsqueda.
-    When ingresamos el pais o region - "Cusco" - donde hospedarnos.
-    And para el rango de fechas "15/02/2023" y "28/02/2023" 
-    And que disponga de 1 habitacion para 2 adultos
-    And que permita niño de edad:
-    	| 5 |
-    And hacemos click en el boton "Buscar"
-    Then se muestra la lista de hoteles con al menos 2 resultados cumplen los criterios.
-    
-  Scenario: Seleccionamos hotel y escojemos habitacion.
-  	Given Estamos en la lista de resulado, seleccionamos el resultado 2 de la lista.
-  	When nos muestra el detalle del hotel
-  	And seleccionamos alguno de los botones para ver las habitaciones, botones:
-  		|"Ver tus opciones"|
-  		|"Elige habitación"|
-  	Then se muestra las habitaciones disponibles y sus precios
-  	And podemos seleccionar la habitación 1 de la lista para Información
-  	And en la Información de la habitación se muestra el mismo precio de lista
-  	And la sección Reserva muestra el mismo precio que en la Información.
-  	
-  Scenario: Reservar y pagar
-  	Given Previamente se verifico el detalle de la habitación, presionamos boton "Reserva ahora"
-  	When Ingresamos nuestros datos en el formulario:
-  		|Juan|
-  		|Cardenas|
-  		|jcard@test.info|
-  		|Perú|
-  		|987654321|
-  		|Ocio|
-  	And Se habilita el boton "Siguiente paso", continuamos
-  	And comprobamos el resumen de la reserva y presionamos el boton "Último paso"
-  	Then se nos pide ingresar los datos de tarjeta:
-  		|4555788765443333|
-  		|Maria Rosa Garcia Garcia|
-  		|02/25|
-  		|000|
-  	And al reservar con "Reservar ahora" nos confirma la reserva
-  	
+Scenario Outline: Reserva completa de habitación para diferentes ciudades y datos de reserva
+    Given El usuario inicia la aplicación y omite pantallas emergentes hasta la pantalla principal de búsqueda
+
+    When busca hotel en "<ciudad>" para las fechas "<fecha_inicio>" a "<fecha_fin>" con <cant_habi> habitación(es) para <cant_adul> adulto(s) y <cant_nino> niño(s) de "<edad_ninos>" años
+    And solicita la búsqueda
+    Then se muestran al menos 2 hoteles que cumplen los criterios
+
+    When selecciona el segundo hotel de la lista
+    And presiona el botón "Ver tus opciones" o "Elige habitación" para ver las habitaciones disponibles
+    And selecciona la primera habitación para ver información detallada
+    Then el precio mostrado es consistente en la lista, la información de la habitación y la sección de reserva
+
+    When inicia la reserva de la habitación seleccionada
+    And completa el formulario con los siguientes datos:
+      | Nombre    | Apellido   | Email            | País | Teléfono    | Motivo     |
+      | <nombre>  | <apellido> | <email>          | <pais>| <telefono> | <motivo>   |
+    And avanza al resumen y confirma el último paso
+    Then la aplicación solicita los datos de tarjeta:
+      | Número de tarjeta    | Nombre en tarjeta          | Vencimiento | CVV |
+      | 4555788765443333     | Maria Rosa Garcia Garcia   | 02/25       | 000 |
+    When confirma la reserva con los datos de pago
+    Then la aplicación muestra la confirmación exitosa de la reserva
+
+    # Nota: Si no hay niños, deja 'edad_ninos' vacío
+    Examples:
+      | ciudad   | fecha_inicio | fecha_fin   | cant_habi | cant_adul | cant_nino | edad_ninos | nombre  | apellido | email              | pais  | telefono   | motivo     |
+      | Cusco    | 15/02/2023   | 28/02/2023  | 1         | 2         | 1         | 5          | Juan    | Cardenas | jcard@test.info    | Perú  | 987654321  | Ocio       |

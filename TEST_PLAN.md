@@ -126,8 +126,8 @@ Nota:
   [https://code.visualstudio.com/sha/download?build=stable&os=win32-x64](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64)
 - **Instalación:**
   Ejecutar el instalador y aceptar los valores predeterminados.
-- **Configuración (opcional):**
-  Instalar extensiones recomendadas: Java Extension Pack, Maven for Java.
+- **Configuración (requerido):**
+  Instalar extensiones: Java Extension Pack (Microsoft), Cucumber (Cucumber).
 
 #### - NodeJS
 
@@ -172,7 +172,7 @@ Nota:
 - **Descarga:**
   [https://github.com/Genymobile/scrcpy/releases](https://github.com/Genymobile/scrcpy/releases)
 - **Instalación:**
-  Descargar el archivo ZIP, extraerlo y ejecutar `scrcpy.exe`.
+  Descargar el archivo ZIP y extraerlo en una ruta de tabajo. El archivo de ejecución es `scrcpy.exe`.
 - **Requisito:**
   El dispositivo Android debe tener activada la **depuración USB**.
 
@@ -221,6 +221,60 @@ mvn --version
   adb install-multiple Booking.com-56.6.apk config.arm64_v8a.apk config.xxhdpi.apk
 
   ```
+
+### 6.3 Procedimiento para ejecución de pruebas
+
+Sigue estos pasos para poner en marcha y ejecutar las pruebas automatizadas en el entorno configurado:
+
+1. **Verificar el driver para Android de Appium**
+   - Abre una terminal y ejecuta:
+     ```bash
+     appium driver list
+     ```
+   - Confirma que el driver `uiautomator2` esté instalado.  
+     Si no aparece, instálalo con:
+     ```bash
+     appium driver install uiautomator2
+     ```
+
+2. **Verificar y ajustar la sesión de Appium Inspector**
+   - Abre **Appium Inspector**.
+   - Carga el archivo de sesión de capabilities:  
+     `TestBooking.appium_inspector.appiumsession`
+   - Actualiza el **ID del dispositivo** (campo `"udid"`) según el resultado de:
+     ```bash
+     adb devices
+     ```
+   - Verifica que la conexión sea exitosa (clic en "Start Session"). Si falla, revisa y corrige los capabilities.
+
+3. **Verificar y ajustar el archivo de capabilities en el proyecto Maven**
+   - Abre el archivo:
+     ```
+     TestBooking\src\test\java\base\BaseAppium.java
+     ```
+   - Busca la sección donde se define `"appium:udid"` y actualízalo con el valor correcto obtenido de `adb devices`.
+   - Guarda los cambios.
+
+4. **Abrir scrcpy para visualizar la pantalla del smartphone**
+   - Ejecuta el archivo:
+     ```bash
+     scrcpy.exe
+     ```
+   - Esto permite visualizar y documentar el comportamiento de la app durante las pruebas desde el computador.
+
+5. **Ejecutar las pruebas desde VSCode**
+   - Abre el archivo:
+     ```
+     TestBooking\src\test\java\runner\RunTest.java
+     ```
+   - Haz clic en la opción de "Run" o "Ejecutar" desde el menú de acciones en VSCode.
+   - Verifica la ejecución de los casos de prueba y registra los resultados observados (apoyándote en la visualización de scrcpy).
+
+---
+
+**Notas adicionales:**
+- Asegúrate de tener activo el servidor Appium (`appium`) antes de iniciar la sesión en Appium Inspector o lanzar las pruebas desde Maven/VSCode.
+- Mantén actualizados los archivos de capabilities en ambos entornos (Inspector y proyecto Maven) para evitar errores de conexión por cambios en dispositivos o configuraciones.
 
 ---
 
