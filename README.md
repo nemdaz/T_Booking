@@ -1,25 +1,14 @@
-# **YP! TEST BOOKING MOBILE APP**
+# **AUTOMATION TEST - BOOKING MOBILE APP**
 
-# DESAFÍO
+# OBJETIVO
 
-###### Actividades a desarrollar
-
-1. Proponga usted el plan de pruebas a desarrollar para realizar la automatización de pruebas según
-   las funcionalidades indicadas en el **Anexo 1**.
-2. Implemente el código necesario para la creación del script de pruebas automatizadas según la
-   funcionalidad indicada en el **Anexo 1** e indique la cobertura de pruebas obtenida por el script.
-3. Indique las herramientas y técnicas utilizadas para realizar la automatización de la funcionalidad
-   descrita en el **Anexo 1**.
-
-###### Consideraciones:
-
-* Automatizar las funcionalidades del flujo completo de la reserva en la aplicación móvil.
-* Considerar la creación de escenarios Happy Paths y UnHappy Paths.
-* Considerar en la automatización todas las aserciones posibles.
-
-###### Anexo 1
-
-Aplicación móvil de Booking.com ([Archivo APK](https://drive.google.com/file/d/1ruY_5qcqWlsE3-W3rgXpFyyMiO59wFUc/view?usp=sharing)).
+1. Desarrollar el plan de pruebas para la automatización de pruebas de la aplicación de reserva hotelera:
+   * Aplicación móvil Android de Booking.com ([Archivo APK](https://apkarchive.org/download/split/booking-com-hotels-and-more/com.booking/22581209/2001769)).
+2. Desarrollar el código para las pruebas automatizadas del flujo de reserva y especificar la cobertura de pruebas según:
+   * Automatizar las funcionalidades del flujo completo de una reserva.
+   * Incluir escenarios de prueba Happy Paths y Unhappy Paths.
+   * Incluir todas las aserciones posibles.
+3. Especificar las herramientas y técnicas utilizadas.
 
 # SOLUCIÓN
 
@@ -27,22 +16,25 @@ Aplicación móvil de Booking.com ([Archivo APK](https://drive.google.com/file/d
 
 ###### 1. Plan de Pruebas
 
-- El archivo ***[Plan de Pruebas](./TEST_PLAN.md)*** es:[TEST_PLAN.md](./TEST_PLAN.md).
-- El archivo ***[Casos de Pruebas](./TestBooking/src/test/resources/features/test_booking.feature)*** basado en Cucumber está en: `TestBooking\src\test\resources\features\test_booking.feature`
+
+| Documento  | Ruta/Archivo |
+| --- | --------- |
+| Plan de pruebas | [TEST_PLAN.md](./TEST_PLAN.md) |
+| Casos de pruebas | [TestBooking\src\test\resources\features\test_booking.feature](./TestBooking/src/test/resources/features/test_booking.feature) |
 
 ###### 2. Código y cobertura
 
 - Proyecto Java/Cucumber/Appium para automatización: `TestBooking\`
 - La cobertura de las pruebas es:
   - Realizar la búsqueda de hoteles.
-  - Escoger el hotel y la habitacion.
-  - Reservar la habitacion.
-  - Escenarios de pruebas establecidos en el ***[Plan de Pruebas](./TEST_PLAN.md) sección 7.***
+  - Escoger el hotel y la habitación.
+  - Reservar la habitación.
+  - Escenarios de pruebas establecidos en el **[Plan de Pruebas](./TEST_PLAN.md) sección 7.**
 
 ###### 3. Herramientas y técnicas
 
-- Para las herramientas utilizadas ver el ***[Plan de Pruebas](./TEST_PLAN.md) sección 4***.
-- Para las técnicas utilizadas ver el ***[Plan de Pruebas](./TEST_PLAN.md) sección 6***.
+- Para las herramientas utilizadas ver el **[Plan de Pruebas](./TEST_PLAN.md) sección 4**.
+- Para las técnicas utilizadas ver el **[Plan de Pruebas](./TEST_PLAN.md) sección 6**.
 
 **DEMO**
 

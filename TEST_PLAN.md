@@ -1,155 +1,236 @@
-# PLAN DE PRUEBAS DE SISTEMAS
+# PLAN DE PRUEBAS
 
-### 1. Introducción
+## 1. Introducción
 
 ##### Nombre
 
+
 | Nombre              | Detalle                                | Versión |
-| :------------------ | :------------------------------------- | -------- |
+| :-------------------- | :--------------------------------------- | ---------- |
 | PPS_010100_00000002 | Plan de pruebas para el APK de Booking | v1.0.0   |
 
 ##### Componentes
 
+
 | Tipo       | Código | Descripción       |
-| :--------- | :------ | :----------------- |
+| :----------- | :-------- | :------------------- |
 | Sistema    | 01      | Booking            |
 | Subsistema | 0101    | Booking Mobile App |
 | Módulo    | 010100  | Todos              |
 
-##### Responsables
+### Responsables
+
 
 | Código | Rol                | Nombre  | Función                                  |
-| :------ | :----------------- | :------ | :---------------------------------------- |
+| :-------- | :------------------- | :-------- | :------------------------------------------ |
 | 01      | Autor              | Nem Daz | Elaboración del Plan de Pruebas          |
 | 01      | Líder de proyecto | Nem Daz | Liderar la ejecución del Plan de Pruebas |
 
-##### Documentos relacionados
+### Objetos relacionados
 
-| Descripcion                                      | Origen/Fuente        | Version |
-| :----------------------------------------------- | :------------------- | :------ |
-| Definicion y especificación del sistema Booking | booking-com-32-9.apk | v32.9.0 |
 
-### 2. Objetivo
+| Descripción                              | Origen/Fuente                                                  | Version |
+| :------------------------------------------ | :--------------------------------------------------------------- | :-------- |
+| Definición y especificación del sistema | https://play.google.com/store/apps/details?id=com.booking      | NA      |
+| Repositorio de instalador APK             | https://apkarchive.org/booking-com-hotels-and-more/com.booking | NA      |
 
-La finalidad del presente documento es definir las pautas y estrategias que nos permitiran cumplir con la certificacion de calidad del aplicativo móvil 010100 del sistema Booking.
+## 2. Objetivo
+
+La finalidad del presente documento es definir las pautas y estrategias que nos permitirán cumplir con la certificación de calidad del aplicativo móvil 010100 del sistema Booking.
 
 El objetivo general es definir las condiciones que nos permitan ejecutar las pruebas y en consecuencia nos entregue un sistema que cumpla con las funcionalidades requeridas por todos los interesados.
 
 El plan de pruebas debe incluir las pautas necesarias para recrear un ambiente de pruebas automatizados.
 
-### 3. Alcance
+## 3. Alcance
 
-El presente documento cumple con servir de guía en el proceso de ejecucion de pruebas para los responsables del proyecto.
+El presente documento cumple con servir de guía en el proceso de ejecución de pruebas para los responsables del proyecto.
 
-El plan de pruebas se enmarca al modulo 010100 del sistema Booking la cual corresponde a funcionalidades del Aplicativo Movil (Ver punto 1 en "Documentos relacionados").
+El plan de pruebas se enmarca al modulo 010100 del sistema Booking la cual corresponde a funcionalidades de la aplicación móvil (Ver punto 1 en "Objetos relacionados").
 
-### 4. Entorno de Pruebas
+## 4. Objetos de Pruebas
 
-##### Ambiente de Pruebas
 
-| Tipo               | Nombre               | Detalle                                                                                                                                                               |
-| :----------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dispositivo Laptop | Lenovo Yoga 7        | Ryzen 7 Serie 4000,<br />16GB RAM, 500GB SSD, <br />Windows 11 HSL                                                                                                    |
-| App Android (APK)  | booking-com-32-9.apk | [https://drive.google.com/file/d/1ruY_5qcqWlsE3-W3rgXpFyyMiO59wFUc/view?usp=sharing](https://drive.google.com/file/d/1ruY_5qcqWlsE3-W3rgXpFyyMiO59wFUc/view?usp=sharing) |
+| Componente                 | Nombre/Descripción         | Versión | Identificador        | Observaciones                                                                                                                                                                                                        |
+| :--------------------------- | :---------------------------- | :--------- | :--------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Aplicación móvil Android | Booking.com Rservas Hoteles | 56.6     | Booking.com-56.6.apk | Build source:<br /> [https://apkarchive.org/download/split/booking-com-hotels-and-more/com.booking/22581209/2001769](https://apkarchive.org/download/split/booking-com-hotels-and-more/com.booking/22581209/2001769) |
 
-##### Herramientas
+Cada uno de estos componentes será sometido a pruebas según el alcance y criterios definidos en este documento.
 
-| Tipo     | Nombre                                                         | Detalle                                                                                                                                |
-| :------- | :------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
-| Software | VSCode v1.75.0                                                 | Editor/IDE.                                                                                                                            |
-| Software | Eclipse IDE 2022-12                                            | Java IDE                                                                                                                               |
-| Software | SourceTree 3.4.8                                               | Gestor de control de versiones git.                                                                                                    |
-| Software | Git                                                            | Herramienta de controlde versiones.                                                                                                    |
-| Servicio | GitHub                                                         | Repositorio en la nube para el control de versiones git.                                                                              |
-| Software | NodeJS v18.14.0                                                | Necesario para instalar Appium v2 y su driver.                                                                                         |
-| Software | Android SDK Tools                                              | Herramientas de android (Google).                                                                                                      |
-| Software | scrcpy                                                         | Visor de pantalla de Android en Windows                                                                                                |
-| Software | appium v2                                                      | Appium es un Framework de automatización de pruebas de código abierto para usar con aplicaciones web nativas, híbridas y móviles. |
-| Software | uiautomator2                                                   | Driver necesario para la conección entre Appium y el dispositivo                                                                      |
-| Software | appium-inspector                                               | Aplicativo desktop para inspeccionar apps/apk en el proceso de pruebas.                                                                |
-| Software | appium-doctor                                                  | Para verificar si cumplimos con lo requisitos para usar Appium                                                                         |
-| Hardware | Smartphone Xiaomi (Android 13)<br />Tablet Lenovo (Android 11) | Dispositivos de pruebas Android.                                                                                                       |
+## 5. Entorno de Pruebas
 
-### 5. Configuracion del Entorno de Pruebas
+### Hardware del entorno
 
-De acuerdo a lo indicado en el punto "4. Entorno de Pruebas" se realiza la configuracion del entorno de pruebas.
 
-##### Instalacion y cuentas
+| Tipo                   | Nombre           | Detalle                                                 |
+| :----------------------- | :----------------- | :-------------------------------------------------------- |
+| Dispositivo Laptop     | Lenovo Yoga 7    | Ryzen 7 Serie 4000, 16GB RAM, 500GB SSD, Windows 11 HSL |
+| Dispositivo Smartphone | Motorola Edge 30 | Android 14, 8GB RAM, 128GB ROM                          |
 
-- Descargar el sistema de control de versiones desde la url https://git-scm.com/download/win en su version para el SO Windows.
-- Descargar e instalar el sistema adminsitrador de control de versiones SourceTree desde la url https://www.sourcetreeapp.com/ en su version para el SO Windows.
-- Descargar e instalar el editor/ide VScode desde la url https://code.visualstudio.com/sha/download?build=stable&os=win32-x64.
-- Crear una cuenta en el servicio cloud de control de versiones https://github.com/.
-- Descargar e instalar NodeJs de manera global, usar la url https://nodejs.org/en/.
-- Descargar e instalar Eclipse IDE 2022-12.
-- Descargar e instalar Appium Inspector desde [https://github.com/appium/appium-inspector](https://github.com/appium/appium-inspector).
+### Software requerido
 
-##### Configuración
 
-**GitHub**
+| Tipo     | Nombre / Versión     | Descripción / Uso                                                                          |
+| :--------- | :---------------------- | :-------------------------------------------------------------------------------------------- |
+| Software | VSCode v1.100.3       | Editor/IDE.                                                                                 |
+| Software | SourceTree 3.4.23     | Gestor de control de versiones git.                                                         |
+| Software | Git v2.49.0           | Herramienta de control de versiones.                                                        |
+| Servicio | GitHub                | Repositorio en la nube para el control de versiones git.                                   |
+| Software | NodeJS v22.16.0       | Necesario para instalar Appium v2 y su driver.                                              |
+| Software | Android SDK Tools     | Herramientas de android (Google).                                                           |
+| Software | scrcpy v3.2           | Visor de pantalla de Android en Windows                                                     |
+| Software | Appium v2.19.0        | Framework de automatización de pruebas en aplicaciones web nativas, híbridas y móviles. |
+| Software | uiautomator2          | Driver necesario para la conexión entre Appium y el dispositivo                            |
+| Software | appium-inspector      | Aplicativo desktop para inspeccionar apps/apk en el proceso de pruebas.                     |
 
-- En el panel de trabajo de la plataforma ubicarnos en la opción "New repository" y crear el repositorio "YpTest_APIBooker", esto por defecto nos crea en branch main y el archivo README.md.
+## 6. Configuración del Entorno de Pruebas
 
-**SourceTree**
+Guía para la descarga, instalación y configuración de cada software requerido para el entorno de pruebas.
 
-- Abrimos el aplicativo, seguimos los pasos que nos indica para el uso del aplicativo (solo la primera vez que se inicia), una vez que estamos en la interfaz principal nos ubicamos en la opcion "*File - Clone/New*", seleccionamos la opción Clone e ingresamos los datos que nos solicita dicha interfaz:
+---
 
-  - La url del repositorio, creado previamente en GitHub.
-  - La ruta local donde se clonará el repositorio en nuestro equipo de trabajo. Esta ruta será nuestro espacio de trabajo local para este plan de pruebas.
-- Una vez clonado el repositorio de GitHub, verificamos la creacion de nuestro espacion de trabajo, de acuerdo a configuraciones previas nuestra carpeta debe tener el nombre "YpTest_Booking". *Ejm: D:\Workspace\Yape\YpTest_Booking*
+Nota:
 
-**VSCode**
+- Seguir el orden de los pasos para evitar problemas de dependencias.
+- Ante errores, consultar la documentación oficial de cada herramienta.
 
-- Abrimos el aplicativo, nos uicamos en la opcion *"File - Open Folder"* y abrimos el forlder "YpTest_Booking" que corresponde a nuestro espacio de trabajo. Aqui trabajemos con los archivos necesarios para el plan de pruebas.
+---
 
-**Eclipse IDE**
+### 6.1 Instalación de software requerido
 
-- Creamos un proyecto Maven de nombre *TestBooking.*
-- Definimos las librerias en el fichero `pom.xml`. Las librerias `appium java-client` y `selenium-java`.
-- Configuramos nuestro proyecto Maven para que se ejecute con Java 1.8.
+#### - Git
 
-**Android Platforms Tools**
+- **Descarga:**
+  [https://git-scm.com/download/win](https://git-scm.com/download/win)
+- **Instalación:**
+  Ejecutar el instalador descargado y seguir el asistente. Mantener opciones por defecto es recomendado.
+- **Configuración (opcional):**
+  Abrir Git Bash y configurar nombre y correo global:
+  ```bash
+  git config --global user.name "tu nombre"
+  git config --global user.email "tu@correo.com"
+  ```
 
-- Existen diversas maneras de instalar estas herramientas; usaremos la mas fácil, Instalar Android Studio solo para usar su SDK.
-- Ubicamos la ruta del SDK (post instalación de Android Studio).
-- Configuramos las ***Variables de entorno del Sistema*** en Windows.
+#### - SourceTree
+
+- **Descarga:**
+  [https://www.sourcetreeapp.com/](https://www.sourcetreeapp.com/)
+- **Instalación:**
+  Ejecutar el instalador. Seguir los pasos para la creación o vinculación de una cuenta Atlassian (requerido para primer uso).
+- **Configuración:**
+  Vincular tu cuenta de GitHub en el menú **Tools > Options > Authentication**.
+
+#### - VSCode
+
+- **Descarga:**
+  [https://code.visualstudio.com/sha/download?build=stable&os=win32-x64](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64)
+- **Instalación:**
+  Ejecutar el instalador y aceptar los valores predeterminados.
+- **Configuración (opcional):**
+  Instalar extensiones recomendadas: Java Extension Pack, Maven for Java.
+
+#### - NodeJS
+
+- **Descarga:**
+  [https://nodejs.org/en/](https://nodejs.org/en/)
+- **Instalación:**
+  Descargar el instalador LTS y ejecutarlo. Seguir los pasos del asistente.
+
+#### - GitHub (Cuenta en la nube)
+
+- **Registro:**
+  [https://github.com/](https://github.com/)
+- **Configuración:**
+  Crear una cuenta nueva o usar una existente.
+
+#### - Android Studio & Android SDK Tools
+
+- **Descarga:**
+  [https://developer.android.com/studio](https://developer.android.com/studio)
+- **Instalación:**
+  Ejecutar el instalador y seguir el asistente.
+- **Configuración:**
+  Ubicar la ruta del SDK, normalmente:
+  `C:\Users\<tu_usuario>\AppData\Local\Android\Sdk`
+- **Variables de entorno del sistema:**
+  Creamos y/o verificamos:
 
   ```
-  ANDROID_HOME = C:\Users\user\AppData\Local\Android\Sdk
+  Creamos/Verificamos la variable:
 
-  Y en la variable existente PATH, añadimos:
+  ANDROID_HOME=C:\Users\<tu_usuario>\AppData\Local\Android\Sdk
 
-  %ANDROID_HOME%\build-tools
+  Actualizamos la variable PATH existente:
+
   %ANDROID_HOME%\platform-tools
-  %ANDROID_HOME%\tools
+  %ANDROID_HOME%\build-tools
+  %ANDROID_HOME%\build-tools\adb
   ```
 
-**NodeJS**
+#### - scrcpy
 
-- Instalamos Appium y el driver para poder enlazar nuestro set de pruebas con el dispositivo y archivo apk a probar. Para mayor informacion al respecto revisar la documentación oficial [https://appium.github.io/appium/docs/en/2.0/](https://appium.github.io/appium/docs/en/2.0/).
+- **Descarga:**
+  [https://github.com/Genymobile/scrcpy/releases](https://github.com/Genymobile/scrcpy/releases)
+- **Instalación:**
+  Descargar el archivo ZIP, extraerlo y ejecutar `scrcpy.exe`.
+- **Requisito:**
+  El dispositivo Android debe tener activada la **depuración USB**.
 
-  ```
-  (Appium v2)
-  npm install -g appium@next
+#### - NodeJS Dependencias para Automatización
+
+- **Appium y uiautomator2**
+
+  ```cmd
+  npm install -g appium
   appium driver install uiautomator2
+
+  [Verificación (CMD)]
+  appium --version
+  appium driver list
   ```
 
-**Otras configuraciones**
+- **Appium Inspector**
+  Descargar de: [https://github.com/appium/appium-inspector/releases](https://github.com/appium/appium-inspector/releases)
+  Ejecutar el instalador descargado.
 
-- Establecemos las variables de entorno para Maven y Java. Los valores de las variables son referenciales ya que pueden variar segun los criterios o configuraciones personalizadas de Tester/Probador.
+#### - Variables de entorno adicionales
+
+Configurar/verificar en **Propiedades del Sistema > Configuración avanzada del sistema > Variables de entorno**:
+
+```cmd
+JAVA_HOME=D:\Program Files\java\jdk
+MAVEN_HOME=D:\Program Files\apache-maven
+
+[Verificación (CMD)]
+java --version
+mvn --version
+```
+
+### 6.2 Despliegue/Instalación de objetos de pruebas
+
+- **Descarga:**
+  Obtener el archivo del repositorio indicado en la sección "Objetos de prueba".
+- **Instalación:**
+  Abrir el terminal (CMD) y ejecutar el siguiente comando en la ruta donde se encuentre el objecto de prueba:
 
   ```
-  JAVA_HOME = C:\Program Files\AdoptOpenJDK\jdk8u362-b09
-  MAVEN_HOME = D:\Program Files\apache-maven-3.8.3
-  M2_HOME = D:\Program Files\apache-maven-3.8.3
+  Desinstalar versiones previas:
+  adb uninstall com.booking
+
+  Instalar aplicación:
+  adb install-multiple Booking.com-56.6.apk config.arm64_v8a.apk config.xxhdpi.apk
+
   ```
 
-### 6. Estrategías de Pruebas
+---
 
-Para el cumplimiento de los objetivos se plantean estrategías de pruebas las cuales estarán en funcion a los siguientes tipos, niveles y técnicas de pruebas.
+## 7. Estrategias de Pruebas
+
+Para el cumplimiento de los objetivos se plantean estrategias de pruebas las cuales estarán en función a los siguientes tipos, niveles y técnicas de pruebas.
+
 
 | Tipo de Prueba      | Nivel de Prueba       | Técnica de Prueba                                                             |
-| :------------------ | :-------------------- | :----------------------------------------------------------------------------- |
+| :-------------------- | :---------------------- | :------------------------------------------------------------------------------- |
 | Prueba Funcional    | Prueba de componentes | Pruebas de equivalencia y valores limites.<br />Pruebas de humo/exploratorias. |
 | Prueba No Funcional | Prueba de componentes | Pruebas de humo/exploratorias.                                                 |
 
@@ -157,39 +238,41 @@ Para el cumplimiento de los objetivos se plantean estrategías de pruebas las cu
 
 - Identificar la estructura DOM del componente APK usando herramientas para este fin.
 - Desarrollar las pruebas usando el patron POM (Page Object Model).
-- Realizar las definiciones de las pruebas usando la filosofía Cucumber y diseñar las pruebas usando Gherkin.
+- Realizar las Definiciones de las pruebas usando la filosofía Cucumber y diseñar las pruebas usando Gherkin.
 
-### 7. Escenario de Pruebas
+## 8. Escenario de Pruebas
 
 Dado las funcionalidades definidas para el sistema objeto (Ver punto 1 en "Documentos relacionados") de este plan de pruebas se debe abordar los escenarios de pruebas:
 
 a) Realizar la búsqueda de hoteles.
 
-b) Escoger el hotel y la habitacion.
+b) Escoger el hotel y la habitación.
 
-c) Reservar la habitacion.
+c) Reservar la habitación.
 
-### 8. Diseño de Pruebas
+## 9. Diseño de Pruebas
 
-Haciendo uso de el o los documentos de definicion del sistema y en concordancia con los escenarios de pruebas contemplados a efecto de este plan de pruebas, se constuye los casos de pruebas.
+Haciendo uso de el o los documentos de Definición del sistema y en concordancia con los escenarios de pruebas contemplados a efecto de este plan de pruebas, se construye los casos de pruebas.
 
 Los casos de pruebas son de tipo funcional y serán diseñadas usando Cucumber/Gherkin:
 
-- Visualizar el proyecto y ubicar las definiciones en la ruta `src/test/resources/features/`
+- Visualizar el proyecto y ubicar las Definiciones en la ruta `src/test/resources/features/`
 
-### 9. Criterios de Aceptación
+## 10. Criterios de Aceptación
 
 El proyecto es aprobado si se satisface los siguientes criterios de aceptación:
 
+
 | Nro. | Descripción                                                                                                       |
-| :--- | :----------------------------------------------------------------------------------------------------------------- |
+| :----- | :------------------------------------------------------------------------------------------------------------------- |
 | 1    | El sistema/módulo debe cumplir satisfactoriamente el 100% de las ejecuciones de los casos de pruebas funcionales. |
 
-### 10. Entregables de Pruebas
+## 11. Producto de trabajo de pruebas
 
-| Tipo de Prueba      | Tipo de Ejecución | Entregable                                 | Descripción                                                                                                                                                                                                 |
-| :------------------ | :----------------- | :----------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pruebas Funcionales | Automatizada       | Proyecto JAVA (Eclipse)                    | Todo el código de la automatización, haciendo uso de Gjerkin, Java y otros.                                                                                                                                |
+
+| Tipo de Prueba      | Tipo de Ejecución | Producto                                   | Descripción                                                                                                                                                                                             |
+| :-------------------- | :------------------- | :------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pruebas Funcionales | Automatizada       | Proyecto JAVA (VScode/Maven)                    | Todo el código de la automatización, haciendo uso de Gherkin, Java y otros.                                                                                                                            |
 | N/A                 | N/A                | TestBooking.appium_inspector.appiumsession | Archivo de entrada para Appium Inspector.<br />Cambiar el identificador `appium:udid` por el del dispositivo en uso. <br />Usar el comando `adb devices` para ver el id de los dispositivos conectados. |
 
 END
