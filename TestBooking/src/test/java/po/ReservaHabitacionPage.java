@@ -5,11 +5,10 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import base.BaseAppium;
 import io.appium.java_client.AppiumBy;
-import utils.Utility;
+import utils.Utils;
 
-public class ReservaHabitacionPage extends BaseAppium {
+public class ReservaHabitacionPage extends BasePage {
 
 	public String cliNombres;
 	public String cliApellidos;
@@ -73,8 +72,10 @@ public class ReservaHabitacionPage extends BaseAppium {
 		// adriver.hideKeyboard();
 
 		// Pais-Region
-		WebElement paregEle = adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_country_value"));
-		WebElement paregIpt = paregEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
+		// WebElement paregEle =
+		// adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_country_value"));
+		// WebElement paregIpt =
+		// paregEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
 		// paregIpt.click();
 		// paregIpt.clear();
 		/*
@@ -117,10 +118,10 @@ public class ReservaHabitacionPage extends BaseAppium {
 		WebElement priceHab = nodeReserva.findElement(AppiumBy.id("com.booking:id/title"));
 
 		String strPrice = priceHab.getText();
-		List<Double> nums = Utility.numbersFromString(strPrice);
-		Double dPrice = Utility.numbersFromString(strPrice).get(0);
+		List<Double> nums = Utils.numbersFromString(strPrice);
+		Double dPrice = Utils.numbersFromString(strPrice).get(0);
 		if (nums.size() > 1) {
-			dPrice = Utility.numbersFromString(strPrice).get(1);
+			dPrice = Utils.numbersFromString(strPrice).get(1);
 		}
 
 		System.out.printf("Reserva Hab. RSV : Precio en Text: %s\n", strPrice);

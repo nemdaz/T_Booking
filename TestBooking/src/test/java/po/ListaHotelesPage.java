@@ -6,10 +6,9 @@ import java.util.List;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-import base.BaseAppium;
 import io.appium.java_client.AppiumBy;
 
-public class ListaHotelesPage extends BaseAppium {
+public class ListaHotelesPage extends BasePage {
 	public int seleccionaPos;
 	public int cantNoHoteles;
 

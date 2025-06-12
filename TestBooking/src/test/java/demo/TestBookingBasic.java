@@ -39,7 +39,7 @@ public class TestBookingBasic {
 		AppiumDriver adriver = new AppiumDriver(new URL("http://127.0.0.1:4723"), cap);
 
 		System.out.println("God, will have to wait for a minute now.");
-		UtilDelay.coolDelay(5000);
+		UtilWaits.coolDelay(5000);
 		System.out.println("God, waited for ... now.");
 
 		try {
@@ -52,7 +52,7 @@ public class TestBookingBasic {
 			destiny_txt.sendKeys("cusco");
 			// adriver.getPageSource();
 		} finally {
-			UtilDelay.coolDelay(15000);
+			UtilWaits.coolDelay(15000);
 			System.out.println("FINALLY");
 			adriver.quit();
 		}

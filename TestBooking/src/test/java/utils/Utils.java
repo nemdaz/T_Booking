@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Utility {
+public class Utils {
 
 	public static Date dateFromString(String date, String format) {
 		SimpleDateFormat oformat = new SimpleDateFormat(format, new Locale("es"));
@@ -30,8 +30,8 @@ public class Utility {
 	}
 
 	public static String dateChangeFormat(String date, String currentFormat, String newFormat) {
-		Date cd = Utility.dateFromString(date, currentFormat);
-		return Utility.dateToString(cd, newFormat);
+		Date cd = Utils.dateFromString(date, currentFormat);
+		return Utils.dateToString(cd, newFormat);
 	}
 
 	public static long dateDiferenceDays(Date dateIni, Date dateEnd) {

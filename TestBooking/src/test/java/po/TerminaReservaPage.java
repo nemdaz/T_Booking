@@ -3,10 +3,9 @@ package po;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import base.BaseAppium;
 import io.appium.java_client.AppiumBy;
 
-public class TerminaReservaPage extends BaseAppium {
+public class TerminaReservaPage extends BasePage{
 	public String cardNumber;
 	public String cardPropietario;
 	public String cardExpira;

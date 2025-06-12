@@ -4,13 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.WebElement;
-import base.BaseAppium;
 import io.appium.java_client.AppiumBy;
-import utils.Utility;
-import utils.UtilDelay;
-import utils.UtilDriver;
+import utils.UtilWaits;
+import utils.Utils;
 
-public class BuscarHotelPage extends BaseAppium {
+public class BuscarHotelPage extends BasePage {
 	public String destino;
 	public String fecIngreso;
 	public String fecSalida;
@@ -57,7 +55,7 @@ public class BuscarHotelPage extends BaseAppium {
 
 	public void ingresaDestino() {
 		// Wait
-		UtilDriver.waitUntilVisible("com.booking:id/facet_search_box_cta", 3);
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/facet_search_box_cta"), 3);
 
 		// Action
 		WebElement desLbl = adriver
@@ -79,19 +77,19 @@ public class BuscarHotelPage extends BaseAppium {
 	public void seleccionaFechas() {
 		String iF = "dd/MM/yyyy";
 		String sF = "dd MMMM yyyy";
-		Date dateCheckin = Utility.dateFromString(this.fecIngreso, iF);
-		String checkin = Utility.dateChangeFormat(this.fecIngreso, iF, sF);
-		String checkout = Utility.dateChangeFormat(this.fecSalida, iF, sF);
+		Date dateCheckin = Utils.dateFromString(this.fecIngreso, iF);
+		String checkin = Utils.dateChangeFormat(this.fecIngreso, iF, sF);
+		String checkout = Utils.dateChangeFormat(this.fecSalida, iF, sF);
 
-		long difIni = Utility.dateDiferenceDays(Utility.dateFromString(this.fecIngreso, iF), new Date());
+		long difIni = Utils.dateDiferenceDays(Utils.dateFromString(this.fecIngreso, iF), new Date());
 		if (difIni < 0) {
-			dateCheckin = Utility.dateAddDays(dateCheckin, Math.abs(difIni));
+			dateCheckin = Utils.dateAddDays(dateCheckin, Math.abs(difIni));
 			System.out.printf("La fecha de Ingreso es menor a la actual, se cambia ... %s\n", dateCheckin);
-			checkin = Utility.dateToString(dateCheckin, sF);
+			checkin = Utils.dateToString(dateCheckin, sF);
 		}
 
 		// Action
-		UtilDriver.waitUntilVisible("com.booking:id/calendar_month_list", 5);
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/calendar_month_list"), 5);
 
 		WebElement calendarioContainer = adriver.findElement(AppiumBy.id("com.booking:id/calendar_month_list"));
 
@@ -103,7 +101,7 @@ public class BuscarHotelPage extends BaseAppium {
 		fechaMesI.click();
 		fechaMesF.click();
 
-		UtilDelay.coolDelay(1 * 1000);
+		UtilWaits.coolDelay(1 * 1000);
 		WebElement btnConfirmaFechas = adriver.findElement(AppiumBy.id("com.booking:id/facet_date_picker_confirm"));
 		btnConfirmaFechas.click();
 	}
@@ -114,7 +112,7 @@ public class BuscarHotelPage extends BaseAppium {
 		desLbl.click();
 
 		// Action: Habitacion
-		UtilDelay.coolDelay(1 * 1000);
+		UtilWaits.coolDelay(1 * 1000);
 		WebElement containerHab = adriver.findElement(AppiumBy.id("com.booking:id/group_config_rooms_count"));
 		WebElement cantHab = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
 		WebElement cantHabAdd = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
@@ -197,14 +195,14 @@ public class BuscarHotelPage extends BaseAppium {
 		}
 
 		// APLICAR CANTIDADES
-		UtilDelay.coolDelay(2000);
+		UtilWaits.coolDelay(2000);
 		WebElement aplicarCantidades = adriver.findElement(AppiumBy.id("com.booking:id/group_config_apply_button"));
 		aplicarCantidades.click();
 	}
 
 	public void seleccionaEdadNinos(int edad) {
 
-		UtilDriver.waitUntilVisible("com.booking:id/age_picker_view", 5);
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/age_picker_view"), 5);
 		WebElement agePanel = adriver.findElement(AppiumBy.id("android:id/parentPanel"));
 		WebElement ageSelected = agePanel.findElement(AppiumBy.id("android:id/numberpicker_input"));
 		WebElement ageDown = agePanel.findElement(AppiumBy.xpath("//android.widget.Button[2]"));
@@ -232,7 +230,7 @@ public class BuscarHotelPage extends BaseAppium {
 	public void buscamosHoteles() {
 		WebElement btnBuscar = adriver.findElement(AppiumBy.id("com.booking:id/facet_search_box_cta"));
 		btnBuscar.click();
-		UtilDelay.coolDelay(5 * 1000);
+		UtilWaits.coolDelay(5 * 1000);
 	}
 
 }

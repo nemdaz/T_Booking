@@ -10,7 +10,6 @@ import io.appium.java_client.service.local.AppiumServiceBuilder;
 public class BaseAppium {
 
 	public static AppiumDriverLocalService aservice;
-	// public static AppiumDriver adriver;
 	public static AndroidDriver adriver;
 	protected DesiredCapabilities cap;
 	protected String IP;
@@ -55,7 +54,6 @@ public class BaseAppium {
 
 		try {
 			// Driver
-			// adriver = new AppiumDriver(new URL("http://" + IP + ":" + PORT), cap);
 			adriver = new AndroidDriver(new URL("http://" + IP + ":" + PORT), cap);
 
 		} catch (Exception ex) {
