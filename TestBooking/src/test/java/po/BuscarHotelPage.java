@@ -54,29 +54,42 @@ public class BuscarHotelPage extends BasePage {
 	}
 
 	public void ingresaDestino() {
-		// Wait
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/facet_search_box_cta"), 3);
+		String xpathContentCompose = "//androidx.compose.ui.platform.ComposeView";
+		String xpathSearchContainer = xpathContentCompose + "/android.view.View/android.widget.ScrollView/android.view.View[1]";
+		String xpathDestLbl = xpathSearchContainer + "/android.view.View[@index='0' and @clickable='true' and @focusable='true']";
 
-		// Action
-		WebElement desLbl = adriver
-				.findElement(AppiumBy.id("com.booking:id/facet_search_box_accommodation_destination"));
-		desLbl.click();
-		WebElement desTxt = adriver
-				.findElement(AppiumBy.id("com.booking:id/facet_with_bui_free_search_booking_header_toolbar_content"));
+		// Wait
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathSearchContainer), 3);
+
+		// Action: Selecciona el campo de destino
+		WebElement destLbl = adriver.findElement(AppiumBy.xpath(xpathDestLbl));
+		destLbl.click();
+
+		// Action: Ingresa el destino
+		WebElement desTxt = adriver.findElement(AppiumBy.xpath("//android.widget.EditText"));
 		desTxt.sendKeys(this.destino);
 	}
 
 	public void seleccionaOpcionesDestino(int index) {
+		String xpathOpts = "//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View/android.view.View[1]";
+		String xpathOptsElems = xpathOpts + "/android.view.View";
+
+		// Wait: esperamos que se cargue la lista de opciones
+		UtilWaits.waitSeconds(2);
+
+		// Wait
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathOpts), 3);
+
 		// Action
-		WebElement optDestinosContainer = adriver
-				.findElement(AppiumBy.id("com.booking:id/facet_disambiguation_content"));
-		List<WebElement> optDestinos = optDestinosContainer.findElements(AppiumBy.xpath("//android.view.ViewGroup"));
+		List<WebElement> optDestinos = adriver.findElements(AppiumBy.xpath(xpathOptsElems));
 		optDestinos.get(index).click();
+
 	}
 
 	public void seleccionaFechas() {
 		String iF = "dd/MM/yyyy";
-		String sF = "dd MMMM yyyy";
+		// String sF = "dd MMMM yyyy";
+		String sF = "EEEE, d 'de' MMMM 'de' yyyy";
 		Date dateCheckin = Utils.dateFromString(this.fecIngreso, iF);
 		String checkin = Utils.dateChangeFormat(this.fecIngreso, iF, sF);
 		String checkout = Utils.dateChangeFormat(this.fecSalida, iF, sF);
@@ -88,11 +101,18 @@ public class BuscarHotelPage extends BasePage {
 			checkin = Utils.dateToString(dateCheckin, sF);
 		}
 
-		// Action
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/calendar_month_list"), 5);
 
-		WebElement calendarioContainer = adriver.findElement(AppiumBy.id("com.booking:id/calendar_month_list"));
+		// Wait: esperamos que se cargue el bootom sheet que contiene el calendario
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/facet_date_picker_tab_container"), 4);
 
+		// Action: Identificamos el contenedor del calendario
+		WebElement calendarioContainer = adriver.findElement(AppiumBy.id("com.booking:id/date_picker_calendar"));
+
+		// Wait: esperamos que se cargue el calendario *Jet Pack Compose*
+		UtilWaits.waitUntilPresenceVisible(adriver,AppiumBy.id("com.booking:id/jpc_date_picker_calendar"), 5);
+		System.out.println("Context: " + adriver.getContext());
+		
+		// Action: Identificamos y selecionamos los elementos de fecha de checkin y checkout
 		WebElement fechaMesI = calendarioContainer
 				.findElement(AppiumBy.xpath("//android.view.View[@content-desc=\"" + checkin + "\"]"));
 		WebElement fechaMesF = calendarioContainer
@@ -101,18 +121,24 @@ public class BuscarHotelPage extends BasePage {
 		fechaMesI.click();
 		fechaMesF.click();
 
-		UtilWaits.coolDelay(1 * 1000);
+		UtilWaits.waitSeconds(2);
 		WebElement btnConfirmaFechas = adriver.findElement(AppiumBy.id("com.booking:id/facet_date_picker_confirm"));
 		btnConfirmaFechas.click();
 	}
 
 	public void seleccionaCantidades() {
-		// Action
-		WebElement desLbl = adriver.findElement(AppiumBy.id("com.booking:id/facet_search_box_accommodation_occupancy"));
-		desLbl.click();
+		// Wait
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/bui_bottom_navigation_content"), 3);
 
-		// Action: Habitacion
-		UtilWaits.coolDelay(1 * 1000);
+		// Action: Selecciona que muestre el panel de cantidades
+		String xpathCantLbl = "//android.widget.ScrollView//android.view.View[@index='0']/android.view.View[@index='2' and @clickable='true' and @focusable='true']";
+		WebElement cantLbl = adriver.findElement(AppiumBy.xpath(xpathCantLbl));
+		cantLbl.click();
+
+		// Wait: Esperamos que se cargue el panel de cantidades
+		UtilWaits.waitSeconds(1);
+
+		// Action: Identificamos elementos de cantidades de habitaciones y seleccionamos
 		WebElement containerHab = adriver.findElement(AppiumBy.id("com.booking:id/group_config_rooms_count"));
 		WebElement cantHab = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
 		WebElement cantHabAdd = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
@@ -136,7 +162,7 @@ public class BuscarHotelPage extends BasePage {
 			_cantHabitacion = Integer.parseInt(cantHab.getText());
 			intentoClickH++;
 		}
-		// Action: Adultos
+		// Action: Identificamos elementos de cantidades de adultos y seleccionamos
 		WebElement containerAdult = adriver.findElement(AppiumBy.id("com.booking:id/group_config_adults_count"));
 		WebElement cantAdu = containerAdult.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
 		WebElement cantAduAdd = containerAdult.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
@@ -165,45 +191,62 @@ public class BuscarHotelPage extends BasePage {
 	}
 
 	public void seleccionaCantidadNinos() {
+
+		String xpathContainerNinos = "com.booking:id/group_config_children_count";
+		String xpathCantNinos = "com.booking:id/bui_input_stepper_value";
+		String xpathAddNinos = "com.booking:id/bui_input_stepper_add_button";
+		String xpathRemNinos = "com.booking:id/bui_input_stepper_remove_button";
+
 		// Action: Ninos
-		WebElement containerNinos = adriver.findElement(AppiumBy.id("com.booking:id/group_config_children_count"));
-		WebElement cantNinos = containerNinos.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
-		WebElement cantNinosAdd = containerNinos
-				.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
-		WebElement cantNinosRem = containerNinos
-				.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_remove_button"));
+		WebElement containerNinos = adriver.findElement(AppiumBy.id(xpathContainerNinos));
+		WebElement cantNinos = containerNinos.findElement(AppiumBy.id(xpathCantNinos));
+		WebElement addNinos = containerNinos.findElement(AppiumBy.id(xpathAddNinos));
+		WebElement remNinos = containerNinos.findElement(AppiumBy.id(xpathRemNinos));
 
 		System.out.println("Cantidad Ninos: " + cantNinos.getText());
 
-		int _cantNinos = Integer.parseInt(cantNinos.getText());
+		int icantNinos = Integer.parseInt(cantNinos.getText());
 
 		int intentoClickN = 1;
-		while (_cantNinos != this.ninosEdad.size() && intentoClickN < 20) {
-			if (_cantNinos < this.ninosEdad.size()) {
-				cantNinosAdd.click();
+		while (icantNinos != this.ninosEdad.size() && intentoClickN < 20) {
+			if (icantNinos < this.ninosEdad.size()) {
+				addNinos.click();
 				// System.out.println("Cantidad : Add" + cantNinos.getText());
 				this.seleccionaEdadNinos(this.ninosEdad.get(intentoClickN - 1));
 			}
-			if (_cantNinos > this.ninosEdad.size()) {
-				cantNinosRem.click();
+			if (icantNinos > this.ninosEdad.size()) {
+				remNinos.click();
 				System.out.println("Cantidad : Rem" + cantNinos.getText());
 			}
-			containerNinos = adriver.findElement(AppiumBy.id("com.booking:id/group_config_children_count"));
-			cantNinos = containerNinos.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
-			_cantNinos = Integer.parseInt(cantNinos.getText());
+			containerNinos = adriver.findElement(AppiumBy.id(xpathContainerNinos));
+			cantNinos = containerNinos.findElement(AppiumBy.id(xpathCantNinos));
+			icantNinos = Integer.parseInt(cantNinos.getText());
 			intentoClickN++;
 		}
 
 		// APLICAR CANTIDADES
-		UtilWaits.coolDelay(2000);
+		UtilWaits.waitSeconds(2);
 		WebElement aplicarCantidades = adriver.findElement(AppiumBy.id("com.booking:id/group_config_apply_button"));
 		aplicarCantidades.click();
 	}
 
 	public void seleccionaEdadNinos(int edad) {
+		String xpathSeccionChild = "com.booking:id/group_config_children_ages_section";
+		String xpathPanelChild = "com.booking:id/parentPanel";
 
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/age_picker_view"), 5);
-		WebElement agePanel = adriver.findElement(AppiumBy.id("android:id/parentPanel"));
+		// Wait: Esperamos que se muestre la sección de selección de edad de los niños
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id(xpathSeccionChild), 3);
+
+		// Action: Seleciona el campo de selección de edad de los niños, abre el popup de selección
+		WebElement openPopEdadNinos = adriver.findElement(AppiumBy.id("com.booking:id/bui_input_container_background"));
+		openPopEdadNinos.click();
+
+		// Wait: Esperamos que se muestre el panel de selección de edad de los niños
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.id(xpathPanelChild), 3);
+
+		// Action: Identificamos los elementos del panel de selección de edad
+		WebElement agePanel = adriver.findElement(AppiumBy.id(xpathPanelChild));
+		WebElement ageUp = agePanel.findElement(AppiumBy.xpath("//android.widget.Button[1]"));
 		WebElement ageSelected = agePanel.findElement(AppiumBy.id("android:id/numberpicker_input"));
 		WebElement ageDown = agePanel.findElement(AppiumBy.xpath("//android.widget.Button[2]"));
 		WebElement ageOK = agePanel.findElement(AppiumBy.id("android:id/button1"));
@@ -215,7 +258,6 @@ public class BuscarHotelPage extends BasePage {
 			ageDown.click();
 			ageSelected = agePanel.findElement(AppiumBy.id("android:id/numberpicker_input"));
 			maxIntent++;
-
 		}
 
 		if (ageSelected.getText().contains(String.valueOf(edad))) {
@@ -228,9 +270,15 @@ public class BuscarHotelPage extends BasePage {
 	}
 
 	public void buscamosHoteles() {
-		WebElement btnBuscar = adriver.findElement(AppiumBy.id("com.booking:id/facet_search_box_cta"));
+		String xpathContentCompose = "//androidx.compose.ui.platform.ComposeView";
+		String xpathSearchContainer = xpathContentCompose + "/android.view.View/android.widget.ScrollView/android.view.View[1]";
+		String xpathBtnSearch = xpathSearchContainer + "/android.view.View[4]/android.widget.Button";
+
+		UtilWaits.waitUntilPresenceVisible(adriver, AppiumBy.xpath(xpathContentCompose), 2);
+		UtilWaits.waitUntilPresenceVisible(adriver, AppiumBy.xpath(xpathSearchContainer), 2);
+
+		WebElement btnBuscar = adriver.findElement(AppiumBy.xpath(xpathBtnSearch));
 		btnBuscar.click();
-		UtilWaits.coolDelay(5 * 1000);
 	}
 
 }

@@ -26,10 +26,4 @@ public class HomePage extends BasePage {
             btnCloseX.click();
         }
     }
-
-    public void esperaPantallaPrincipal() {
-        // Implement logic to wait until the main search screen is displayed
-        // Example:
-        // UtilDriver.waitUntilVisible("com.booking:id/main_search_screen", 5);
-    }
 }

@@ -2,7 +2,6 @@ package steps;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java8.En;
-import po.BasePage;
 import po.BuscarHotelPage;
 import po.EscogeHabitacionPage;
 import po.HomePage;
@@ -34,7 +33,7 @@ public class ReservaStepsDefinition implements En {
         Before(() -> {
             // Inicia el servicio de Appium, pero en este proyecto lo iniciamos en el terminal con el comnado "appium"
             // apiumBase.startService();
-            
+
             // Inicia la sesión de Appium
             apiumBase.startDriver();
         });
@@ -50,13 +49,10 @@ public class ReservaStepsDefinition implements En {
                 (String destino, String checkin, String checkout, Integer cantHabitacion, Integer cantAdultos,
                         Integer cantNino, String edadesNinos) -> {
 
-                    UtilWaits.coolDelay(2000);
-
                     // Destino
                     Contexto.reservaObj.setDestino(destino);
                     buscarHotelPage.destino = destino;
                     buscarHotelPage.ingresaDestino();
-                    UtilWaits.coolDelay(1000);
                     buscarHotelPage.seleccionaOpcionesDestino(2);
 
                     // Fechas
@@ -86,55 +82,55 @@ public class ReservaStepsDefinition implements En {
                 });
 
         And("solicita la búsqueda", () -> {
-            UtilWaits.coolDelay(2000);
+            UtilWaits.waitSeconds(2);
             buscarHotelPage.buscamosHoteles();
         });
 
         Then("se muestran al menos {int} hoteles que cumplen los criterios", (Integer minCant) -> {
-            UtilWaits.coolDelay(2000);
+            UtilWaits.waitSeconds(2);
             List<String> resultado = Contexto.listaHoteles.listaResultadoHoteles();
             System.out.println("Valor de no hoteles: " + Contexto.listaHoteles.cantNoHoteles);
             assertTrue(minCant <= resultado.size());
         });
 
         When("selecciona el segundo hotel de la lista", () -> {
-            UtilWaits.coolDelay(2000);
+            UtilWaits.waitSeconds(2);
             Contexto.listaHoteles.seleccionaPos = 2;
             Contexto.listaHoteles.seleccionaHotel();
         });
 
         And("presiona el botón {string} o {string} para ver las habitaciones disponibles", (String op1, String op2) -> {
-            UtilWaits.coolDelay(1000);
+            UtilWaits.waitSeconds(1);
             // Usa ambos nombres de botón para compatibilidad
             Contexto.listaHoteles.muestraHabitacionesHotel(Arrays.asList(op1, op2));
         });
 
         And("selecciona la primera habitación para ver información detallada", () -> {
-            UtilWaits.coolDelay(2000);
+            UtilWaits.waitSeconds(2);
             escogeHabitacionPage.posicionHabitacion = 1;
             Contexto.reservaObj.setCostoPrevio(escogeHabitacionPage.seleccionaHabitacion());
         });
 
         Then("el precio mostrado es consistente en la lista, la información de la habitación y la sección de reserva",
                 () -> {
-                    UtilWaits.coolDelay(5000);
+                    UtilWaits.waitSeconds(5);
                     Double pInfo = escogeHabitacionPage.muestraInformacionHabitacion();
                     assertEquals(Contexto.reservaObj.getCostoPrevio(), pInfo);
                     Contexto.reservaObj.setCostoPrevio(pInfo);
 
-                    UtilWaits.coolDelay(1000);
+                    UtilWaits.waitSeconds(1);
                     Double pReserva = escogeHabitacionPage.muestraInformacionReserva();
                     assertEquals(Contexto.reservaObj.getCostoPrevio(), pReserva);
                     Contexto.reservaObj.setCostoPrevio(pReserva);
                 });
 
         When("inicia la reserva de la habitación seleccionada", () -> {
-            UtilWaits.coolDelay(1000);
+            UtilWaits.waitSeconds(1);
             reservaPage.iniciamosReserva("Reserva ahora"); // puedes parametrizar si el botón varía
         });
 
         And("completa el formulario con los siguientes datos:", (DataTable datosReserva) -> {
-            UtilWaits.coolDelay(5000);
+            UtilWaits.waitSeconds(5);
             List<String> datos = datosReserva.asList();
             reservaPage.cliNombres = datos.get(0);
             reservaPage.cliApellidos = datos.get(1);
@@ -150,14 +146,14 @@ public class ReservaStepsDefinition implements En {
         });
 
         And("avanza al resumen y confirma el último paso", () -> {
-            UtilWaits.coolDelay(1000);
+            UtilWaits.waitSeconds(1);
             reservaPage.comprobamosDetalleReserva("Siguiente paso");
-            UtilWaits.coolDelay(1000);
+            UtilWaits.waitSeconds(1);
             reservaPage.comprobamosResumenReserva("Último paso");
         });
 
         Then("la aplicación solicita los datos de tarjeta:", (DataTable datosTarjeta) -> {
-            UtilWaits.coolDelay(4000);
+            UtilWaits.waitSeconds(4);
             List<String> datCard = datosTarjeta.asList();
             reservaFinPage.cardNumber = datCard.get(0);
             reservaFinPage.cardPropietario = datCard.get(1);
@@ -168,11 +164,11 @@ public class ReservaStepsDefinition implements En {
         });
 
         When("confirma la reserva con los datos de pago", () -> {
-            UtilWaits.coolDelay(1000);
+            UtilWaits.waitSeconds(1);
         });
 
         Then("la aplicación muestra la confirmación exitosa de la reserva", () -> {
-            UtilWaits.coolDelay(1000);
+            UtilWaits.waitSeconds(1);
         });
 
         After(() -> {
