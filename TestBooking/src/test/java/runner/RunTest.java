@@ -12,5 +12,5 @@ import io.cucumber.junit.CucumberOptions;
 		"json:target/cucumber.json"
 })
 public class RunTest {
-	
+
 }

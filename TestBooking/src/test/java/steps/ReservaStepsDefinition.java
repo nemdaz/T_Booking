@@ -34,6 +34,9 @@ public class ReservaStepsDefinition implements En {
             // Inicia el servicio de Appium, pero en este proyecto lo iniciamos en el terminal con el comnado "appium"
             // apiumBase.startService();
 
+            // Instala/Reinstala la aplicación si es necesario
+            apiumBase.installApp();
+
             // Inicia la sesión de Appium
             apiumBase.startDriver();
         });

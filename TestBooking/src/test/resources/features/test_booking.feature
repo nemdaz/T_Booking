@@ -27,4 +27,4 @@ Scenario Outline: Reserva completa de habitación para diferentes ciudades y dat
     # Nota: Si no hay niños, deja 'edad_ninos' vacío
     Examples:
       | ciudad   | fecha_inicio | fecha_fin   | cant_habi | cant_adul | cant_nino | edad_ninos | nombre  | apellido | email              | pais  | telefono   | motivo     |
-      | Cusco    | 15/06/2025   | 28/06/2025  | 1         | 2         | 1         | 5          | Juan    | Cardenas | jcard@test.info    | Perú  | 987654321  | Ocio       |
+      | Cusco    | 20/06/2025   | 28/06/2025  | 1         | 2         | 1         | 5          | Juan    | Cardenas | jcard@test.info    | Perú  | 987654321  | Ocio       |

@@ -3,12 +3,15 @@ package utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Utils {
 
@@ -58,4 +61,14 @@ public class Utils {
 	public static Double numberFromString(String strDouble) {
 		return numbersFromString(strDouble).get(0);
 	}
+
+	public static Map<String, String> dateToMap(Date fecha) {
+		String[] patrones = { "EEEE", "d", "MMMM", "yyyy", "MM", "dd", "HH", "mm", "ss" };
+
+		return Arrays.stream(patrones)
+				.collect(Collectors.toMap(
+						p -> p,
+						p -> new SimpleDateFormat(p, new Locale("es", "ES")).format(fecha)));
+	}
+
 }

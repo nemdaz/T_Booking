@@ -5,6 +5,7 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumBy;
+import utils.UtilWaits;
 import utils.Utils;
 
 public class EscogeHabitacionPage extends BasePage {
@@ -17,7 +18,8 @@ public class EscogeHabitacionPage extends BasePage {
 
 	public boolean muestraHabitaciones() {
 		WebElement nodeHab = adriver.findElement(AppiumBy.id("com.booking:id/rooms_recycler_view"));
-		List<WebElement> habitaciones = nodeHab.findElements(AppiumBy.id("com.booking:id/room_list_card_wrapper_container"));
+		List<WebElement> habitaciones = nodeHab
+				.findElements(AppiumBy.id("com.booking:id/room_list_card_wrapper_container"));
 
 		System.out.println("Lista de habitaciones:");
 		for (WebElement habitacion : habitaciones) {
@@ -31,14 +33,21 @@ public class EscogeHabitacionPage extends BasePage {
 	}
 
 	public Double seleccionaHabitacion() {
-		WebElement nodeHab = adriver.findElement(AppiumBy.id("com.booking:id/rooms_recycler_view"));
-		List<WebElement> habitaciones = nodeHab
-				.findElements(AppiumBy.id("com.booking:id/room_list_card_wrapper_container"));
+
+		// WebElement nodeHab =
+		// adriver.findElement(AppiumBy.id("com.booking:id/rooms_recycler_view"));
+
+		// Wait: Esperamos que se cargue la lista de habitaciones
+		UtilWaits.waitUntilFound(adriver, AppiumBy.id("com.booking:id/room_list_item_compose"));
+
+		List<WebElement> habitaciones = adriver.findElementsUntilFound(AppiumBy.id("com.booking:id/room_list_item_compose"));
 		WebElement habitacion = habitaciones.get(this.posicionHabitacion - 1);
-		WebElement ePrice = habitacion.findElement(AppiumBy.id("com.booking:id/price_view_price"));
+		String xpathHabPrice = "//android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View[1]/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View/android.view.View/android.widget.TextView";
+		WebElement ePrice = habitacion.findElement(AppiumBy.id(xpathHabPrice));
 		String strPrice = ePrice.getText();
 
-		habitacion.findElement(AppiumBy.xpath("//android.widget.LinearLayout/android.widget.LinearLayout[1]")).click();
+		String xpathBtnSeleccionar = "//android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[3]/android.widget.Button";
+		habitacion.findElement(AppiumBy.xpath(xpathBtnSeleccionar)).click();
 
 		Double dPrice = Utils.numberFromString(strPrice);
 

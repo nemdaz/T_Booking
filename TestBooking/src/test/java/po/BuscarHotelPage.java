@@ -1,10 +1,14 @@
 package po;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebElement;
 import io.appium.java_client.AppiumBy;
+import utils.UtilLogs;
 import utils.UtilWaits;
 import utils.Utils;
 
@@ -55,8 +59,10 @@ public class BuscarHotelPage extends BasePage {
 
 	public void ingresaDestino() {
 		String xpathContentCompose = "//androidx.compose.ui.platform.ComposeView";
-		String xpathSearchContainer = xpathContentCompose + "/android.view.View/android.widget.ScrollView/android.view.View[1]";
-		String xpathDestLbl = xpathSearchContainer + "/android.view.View[@index='0' and @clickable='true' and @focusable='true']";
+		String xpathSearchContainer = xpathContentCompose
+				+ "/android.view.View/android.widget.ScrollView/android.view.View[1]";
+		String xpathDestLbl = xpathSearchContainer
+				+ "/android.view.View[@index='0' and @clickable='true' and @focusable='true']";
 
 		// Wait
 		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathSearchContainer), 3);
@@ -78,7 +84,7 @@ public class BuscarHotelPage extends BasePage {
 		UtilWaits.waitSeconds(2);
 
 		// Wait
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathOpts), 3);
+		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathOpts), 4);
 
 		// Action
 		List<WebElement> optDestinos = adriver.findElements(AppiumBy.xpath(xpathOptsElems));
@@ -89,8 +95,10 @@ public class BuscarHotelPage extends BasePage {
 	public void seleccionaFechas() {
 		String iF = "dd/MM/yyyy";
 		// String sF = "dd MMMM yyyy";
-		String sF = "EEEE, d 'de' MMMM 'de' yyyy";
+		// String sF = "EEEE, d 'de' MMMM 'de' yyyy";
+		String sF = "EEEE, d MMMM yyyy";
 		Date dateCheckin = Utils.dateFromString(this.fecIngreso, iF);
+		Date dateCheckout = Utils.dateFromString(this.fecSalida, iF);
 		String checkin = Utils.dateChangeFormat(this.fecIngreso, iF, sF);
 		String checkout = Utils.dateChangeFormat(this.fecSalida, iF, sF);
 
@@ -100,46 +108,47 @@ public class BuscarHotelPage extends BasePage {
 			System.out.printf("La fecha de Ingreso es menor a la actual, se cambia ... %s\n", dateCheckin);
 			checkin = Utils.dateToString(dateCheckin, sF);
 		}
-
-
-		// Wait: esperamos que se cargue el bootom sheet que contiene el calendario
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/facet_date_picker_tab_container"), 4);
+		Map<String, String> dateMapCheckin = Utils.dateToMap(dateCheckin);
+		Map<String, String> dateMapCheckout = Utils.dateToMap(dateCheckout);
 
 		// Action: Identificamos el contenedor del calendario
-		WebElement calendarioContainer = adriver.findElement(AppiumBy.id("com.booking:id/date_picker_calendar"));
+		String selcCalendarSheet = "new UiSelector().resourceId(\"com.booking:id/design_bottom_sheet\")";
+		UtilWaits.waitUntilFound(adriver, AppiumBy.androidUIAutomator(selcCalendarSheet));
 
-		// Wait: esperamos que se cargue el calendario *Jet Pack Compose*
-		UtilWaits.waitUntilPresenceVisible(adriver,AppiumBy.id("com.booking:id/jpc_date_picker_calendar"), 5);
-		System.out.println("Context: " + adriver.getContext());
-		
-		// Action: Identificamos y selecionamos los elementos de fecha de checkin y checkout
-		WebElement fechaMesI = calendarioContainer
-				.findElement(AppiumBy.xpath("//android.view.View[@content-desc=\"" + checkin + "\"]"));
-		WebElement fechaMesF = calendarioContainer
-				.findElement(AppiumBy.xpath("//android.view.View[@content-desc=\"" + checkout + "\"]"));
+		// Action: Identificamos y selecionamos los elementos fecha checkin y checkout
+		String regexFI = ".*\\b%s\\b.*\\b(de )?%s\\b.*\\b%s\\b.*"
+				.formatted(dateMapCheckin.get("d"), dateMapCheckin.get("MMMM"), dateMapCheckin.get("yyyy"));
+		String regexFF = ".*\\b%s\\b.*\\b(de )?%s\\b.*\\b%s\\b.*"
+				.formatted(dateMapCheckout.get("d"), dateMapCheckout.get("MMMM"), dateMapCheckout.get("yyyy"));
+		String selecFechaMesI = "new UiSelector().descriptionMatches(\"%s\")".formatted(regexFI);
+		String selecFechaMesF = "new UiSelector().descriptionMatches(\"%s\")".formatted(regexFF);
+
+		WebElement fechaMesI = adriver.findElementUntilFound(AppiumBy.androidUIAutomator(selecFechaMesI));
+		WebElement fechaMesF = adriver.findElementUntilFound(AppiumBy.androidUIAutomator(selecFechaMesF));
 
 		fechaMesI.click();
 		fechaMesF.click();
 
-		UtilWaits.waitSeconds(2);
+		UtilWaits.waitUntilFound(adriver, AppiumBy.id("com.booking:id/facet_date_picker_confirm"));
 		WebElement btnConfirmaFechas = adriver.findElement(AppiumBy.id("com.booking:id/facet_date_picker_confirm"));
 		btnConfirmaFechas.click();
 	}
 
 	public void seleccionaCantidades() {
-		// Wait
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/bui_bottom_navigation_content"), 3);
 
 		// Action: Selecciona que muestre el panel de cantidades
 		String xpathCantLbl = "//android.widget.ScrollView//android.view.View[@index='0']/android.view.View[@index='2' and @clickable='true' and @focusable='true']";
+		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathCantLbl));
 		WebElement cantLbl = adriver.findElement(AppiumBy.xpath(xpathCantLbl));
 		cantLbl.click();
 
 		// Wait: Esperamos que se cargue el panel de cantidades
-		UtilWaits.waitSeconds(1);
+		String selCantSheet = "new UiSelector().resourceId(\"com.booking:id/design_bottom_sheet\")";
+		UtilWaits.waitUntilFound(adriver, AppiumBy.androidUIAutomator(selCantSheet));
 
 		// Action: Identificamos elementos de cantidades de habitaciones y seleccionamos
-		WebElement containerHab = adriver.findElement(AppiumBy.id("com.booking:id/group_config_rooms_count"));
+		String selCantConfig = "new UiSelector().resourceId(\"com.booking:id/group_config_rooms_count\")";
+		WebElement containerHab = adriver.findElementUntilFound(AppiumBy.androidUIAutomator(selCantConfig));
 		WebElement cantHab = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_value"));
 		WebElement cantHabAdd = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_add_button"));
 		WebElement cantHabRem = containerHab.findElement(AppiumBy.id("com.booking:id/bui_input_stepper_remove_button"));
@@ -237,7 +246,8 @@ public class BuscarHotelPage extends BasePage {
 		// Wait: Esperamos que se muestre la sección de selección de edad de los niños
 		UtilWaits.waitUntilVisible(adriver, AppiumBy.id(xpathSeccionChild), 3);
 
-		// Action: Seleciona el campo de selección de edad de los niños, abre el popup de selección
+		// Action: Seleciona el campo de selección de edad de los niños, abre el popup
+		// de selección
 		WebElement openPopEdadNinos = adriver.findElement(AppiumBy.id("com.booking:id/bui_input_container_background"));
 		openPopEdadNinos.click();
 
@@ -271,7 +281,8 @@ public class BuscarHotelPage extends BasePage {
 
 	public void buscamosHoteles() {
 		String xpathContentCompose = "//androidx.compose.ui.platform.ComposeView";
-		String xpathSearchContainer = xpathContentCompose + "/android.view.View/android.widget.ScrollView/android.view.View[1]";
+		String xpathSearchContainer = xpathContentCompose
+				+ "/android.view.View/android.widget.ScrollView/android.view.View[1]";
 		String xpathBtnSearch = xpathSearchContainer + "/android.view.View[4]/android.widget.Button";
 
 		UtilWaits.waitUntilPresenceVisible(adriver, AppiumBy.xpath(xpathContentCompose), 2);

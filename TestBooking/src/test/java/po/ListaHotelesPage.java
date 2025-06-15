@@ -7,6 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumBy;
+import utils.UtilWaits;
 
 public class ListaHotelesPage extends BasePage {
 	public int seleccionaPos;
@@ -17,18 +18,26 @@ public class ListaHotelesPage extends BasePage {
 	}
 
 	public List<String> listaResultadoHoteles() {
-		WebElement containerResultados = adriver.findElement(AppiumBy.id("com.booking:id/results_list_facet")); // FrameLayout
-		List<WebElement> listaHoteles = containerResultados
-				.findElements(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup"));
-		List<String> resultadoHoteles = new ArrayList<>();
 
-		String nameHotelXpath = "//android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.widget.TextView";
+		// Vars
+		String xpathContResults = "//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/androidx.compose.ui.platform.ComposeView";
+
+		// Wait: Esperar que se muestre la lista de hoteles
+		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathContResults));
+
+		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
+		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
+		String xpathListaHoteles = "//android.view.View[@content-desc]";
+		WebElement containerResultados = adriver.findElement(AppiumBy.xpath(xpathContenedorResultados));
+		List<WebElement> listaHoteles = containerResultados.findElements(AppiumBy.xpath(xpathListaHoteles));
+		List<String> resultadoHoteles = new ArrayList<>();
 
 		this.cantNoHoteles = 0;
 		for (WebElement containerHotel : listaHoteles) {
 			try {
-				WebElement hotelText = containerHotel.findElement(AppiumBy.xpath(nameHotelXpath));
-				resultadoHoteles.add(hotelText.getText());
+				String hotelText = containerHotel.getAttribute("content-desc");
+				String hotelName = hotelText.split("\n")[0];
+				resultadoHoteles.add(hotelName);
 			} catch (NoSuchElementException ex) {
 				System.out.println("Grupo que no es hotel, no se agrega a la lista ...");
 				this.cantNoHoteles++;
@@ -45,11 +54,11 @@ public class ListaHotelesPage extends BasePage {
 
 	public void seleccionaHotel() {
 
-		// this.listaResultadoHoteles(); // Recalculated this.cantNoHoteles
-
-		WebElement containerResultados = adriver.findElement(AppiumBy.id("com.booking:id/results_list_facet")); // FrameLayout
-		List<WebElement> listaHoteles = containerResultados
-				.findElements(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup"));
+		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
+		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
+		String xpathListaHoteles = "//android.view.View[@content-desc]";
+		WebElement containerResultados = adriver.findElement(AppiumBy.xpath(xpathContenedorResultados));
+		List<WebElement> listaHoteles = containerResultados.findElements(AppiumBy.xpath(xpathListaHoteles));
 
 		int finalPosition = (this.seleccionaPos + this.cantNoHoteles) - 1;
 		System.out.printf("Selecciona hotel, posicion final (%s + %s - 1) : %s\n", this.seleccionaPos,
