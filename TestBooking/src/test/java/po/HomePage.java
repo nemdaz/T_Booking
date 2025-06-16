@@ -11,8 +11,8 @@ public class HomePage extends BasePage {
     }
 
     public void omitePantallaNofiticacion() {
-        UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/action_bar_root"), 5);
-        WebElement btnNotNow = adriver.findElement(AppiumBy.xpath("//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View[4]/android.widget.Button"));
+        UtilWaits.waitUntilFound(adriver, AppiumBy.id("com.booking:id/action_bar_root"));
+        WebElement btnNotNow = adriver.findElementUntilFound(AppiumBy.xpath("//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View[4]/android.widget.Button"));
         if (btnNotNow.isDisplayed()) {
             btnNotNow.click();
         }
@@ -20,8 +20,8 @@ public class HomePage extends BasePage {
 
     // Nota: Para booking.com la pantalla de login no es obligatoria al principio.
     public void omitePantallaLogin() {
-        UtilWaits.waitUntilVisible(adriver, AppiumBy.id("com.booking:id/decor_content_parent"), 5);
-        WebElement btnCloseX = adriver.findElement(AppiumBy.xpath("//android.widget.ImageButton[@content-desc=\"Desplazarse hacia arriba\"]"));
+        UtilWaits.waitUntilFound(adriver, AppiumBy.id("com.booking:id/decor_content_parent"));
+        WebElement btnCloseX = adriver.findElementUntilFound(AppiumBy.xpath("//android.widget.ImageButton[@content-desc=\"Desplazarse hacia arriba\"]"));
         if (btnCloseX.isDisplayed()) {
             btnCloseX.click();
         }

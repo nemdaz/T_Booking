@@ -65,14 +65,14 @@ public class BuscarHotelPage extends BasePage {
 				+ "/android.view.View[@index='0' and @clickable='true' and @focusable='true']";
 
 		// Wait
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathSearchContainer), 3);
+		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathSearchContainer));
 
 		// Action: Selecciona el campo de destino
-		WebElement destLbl = adriver.findElement(AppiumBy.xpath(xpathDestLbl));
+		WebElement destLbl = adriver.findElementUntilFound(AppiumBy.xpath(xpathDestLbl));
 		destLbl.click();
 
 		// Action: Ingresa el destino
-		WebElement desTxt = adriver.findElement(AppiumBy.xpath("//android.widget.EditText"));
+		WebElement desTxt = adriver.findElementUntilFound(AppiumBy.xpath("//android.widget.EditText"));
 		desTxt.sendKeys(this.destino);
 	}
 

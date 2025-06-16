@@ -32,7 +32,7 @@ public class ListaHotelesPage extends BasePage {
 		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
 		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
 		String xpathListaHoteles = "//android.view.View[@content-desc]";
-		WebElement containerResultados = adriver.findElement(AppiumBy.xpath(xpathContenedorResultados));
+		WebElement containerResultados = adriver.findElementUntilFound(AppiumBy.xpath(xpathContenedorResultados));
 		List<WebElement> listaHoteles = containerResultados.findElements(AppiumBy.xpath(xpathListaHoteles));
 		List<String> resultadoHoteles = new ArrayList<>();
 

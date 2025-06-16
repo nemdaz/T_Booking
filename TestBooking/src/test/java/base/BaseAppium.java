@@ -25,8 +25,9 @@ public class BaseAppium {
 		cap = new DesiredCapabilities();
 		cap.setCapability("platformName", "Android");
 		cap.setCapability("appium:automationName", "UiAutomator2");
-		// cap.setCapability("appium:udid", "ZY22GM3QXD"); // Your deviece (adb devices)
-		cap.setCapability("appium:udid", "192.168.3.141:5555"); // Same device but wifi connection (adb)
+		cap.setCapability("appium:udid", "ZY22GM3QXD"); // Your physical device (adb devices)
+		//cap.setCapability("appium:udid", "192.168.3.141:5555"); // Same device but wifi connection (adb)
+		//cap.setCapability("appium:udid", "emulator-5554"); // Same device but wifi connection (adb)
 		cap.setCapability("appium:deviceName", "SmartphoneTest");
 		cap.setCapability("appium:platformVersion", "14.0.0");
 		cap.setCapability("appium:appPackage", "com.booking");

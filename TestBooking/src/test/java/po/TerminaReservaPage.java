@@ -30,7 +30,7 @@ public class TerminaReservaPage extends BasePage {
 
 		// Numero
 		String selectorNum = "//android.widget.EditText[@resource-id=\"com.booking:id/new_credit_card_number_edit\"]";
-		WebElement numeroEle = adriver.findElement(AppiumBy.xpath(selectorNum));
+		WebElement numeroEle = adriver.findElementUntilFound(AppiumBy.xpath(selectorNum));
 		numeroEle.click(); // Open keyboard
 		new Actions(adriver).sendKeys(this.cardNumber).perform();
 
