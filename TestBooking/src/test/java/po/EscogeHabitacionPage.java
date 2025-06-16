@@ -33,20 +33,30 @@ public class EscogeHabitacionPage extends BasePage {
 	}
 
 	public Double seleccionaHabitacion() {
-
-		// WebElement nodeHab =
-		// adriver.findElement(AppiumBy.id("com.booking:id/rooms_recycler_view"));
-
+		UtilWaits.waitSeconds(1);
 		// Wait: Esperamos que se cargue la lista de habitaciones
 		UtilWaits.waitUntilFound(adriver, AppiumBy.id("com.booking:id/room_list_item_compose"));
 
 		List<WebElement> habitaciones = adriver.findElementsUntilFound(AppiumBy.id("com.booking:id/room_list_item_compose"));
 		WebElement habitacion = habitaciones.get(this.posicionHabitacion - 1);
-		String xpathHabPrice = "//android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View[1]/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View/android.view.View/android.widget.TextView";
-		WebElement ePrice = habitacion.findElement(AppiumBy.id(xpathHabPrice));
-		String strPrice = ePrice.getText();
 
-		String xpathBtnSeleccionar = "//android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[3]/android.widget.Button";
+		String xpathHabPrice = "//android.widget.TextView[contains(@content-desc, 'Precio actual')]";
+		WebElement ePrice = habitacion.findElement(AppiumBy.xpath(xpathHabPrice));
+		String strPrice = ePrice.getText();
+		System.out.println("> - Precio de la habitación: " + strPrice);
+
+		//Quitamos la seleccion automatica de la primera habitación si hubiese
+		try{
+			//String quitarBtn = "//android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View/android.view.View[4]/android.widget.Button";
+			String quitarBtn = "//android.view.View[contains(@content-desc, 'Eliminar')]";
+			habitacion.findElement(AppiumBy.xpath(quitarBtn)).click();
+		}catch (Exception e) {
+			
+		}
+
+		//String xpathBtnSeleccionar = "//android.view.View/android.view.View/android.view.View/android.view.View[2]/android.view.View[1]/android.view.View/android.view.View/android.view.View[3]/android.widget.Button";
+		//habitacion.findElement(AppiumBy.xpath(xpathBtnSeleccionar)).click();
+		String xpathBtnSeleccionar = "//android.widget.TextView[contains(@text, 'Seleccionar')]";
 		habitacion.findElement(AppiumBy.xpath(xpathBtnSeleccionar)).click();
 
 		Double dPrice = Utils.numberFromString(strPrice);
@@ -71,10 +81,14 @@ public class EscogeHabitacionPage extends BasePage {
 		return dPrice;
 	}
 
-	public Double muestraInformacionReserva() {
+	public Double muestraInformacionPreReserva() {
+		UtilWaits.waitSeconds(1);
+		
+		String xpathNodoReserva = "//androidx.compose.ui.platform.ComposeView[@resource-id=\"com.booking:id/room_list_action_bar_compose\"]";
+		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathNodoReserva));
 
-		WebElement nodeReserva = adriver.findElement(AppiumBy.id("com.booking:id/book_now_layout"));
-		WebElement priceHab = nodeReserva.findElement(AppiumBy.id("com.booking:id/info_title"));
+		String xpathPrice = xpathNodoReserva + "/android.view.View/android.view.View/android.view.View/android.widget.TextView[1]";
+		WebElement priceHab = adriver.findElementUntilFound(AppiumBy.xpath(xpathPrice));
 
 		String strPrice = priceHab.getText();
 		Double dPrice = Utils.numberFromString(strPrice);

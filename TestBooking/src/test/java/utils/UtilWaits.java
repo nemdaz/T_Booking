@@ -29,15 +29,20 @@ public class UtilWaits {
 			try {
 				driver.getPageSource(); // fuerza a Appium a actualizar el DOM
 				List<WebElement> elements = driver.findElements(locator);
+				System.out.println("> Intento " + (i + 1) + " de " + maxAttempts + " para encontrar el elemento: " + locator);
 				if (elements != null && !elements.isEmpty()) {
+					System.out.println("> Elemento encontrado: " + elements.get(0).getText());
 					WebElement el = elements.get(0);
 					if (el.isDisplayed())
 						return;
 				}
+				Thread.sleep(secondsPerTry * 1000L); // espera entre intentos
 			} catch (Exception e) {
 				// opcional: loggea el intento fallido
 			}
 		}
+		System.out.println("\n> Error con el DOM");
+		UtilLogs.printPageSource(driver);
 		throw new NoSuchElementException("Elemento no encontrado tras " + maxAttempts + " intentos.");
 	}
 

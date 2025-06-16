@@ -77,14 +77,14 @@ public class BuscarHotelPage extends BasePage {
 	}
 
 	public void seleccionaOpcionesDestino(int index) {
-		String xpathOpts = "//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View/android.view.View[1]";
-		String xpathOptsElems = xpathOpts + "/android.view.View";
-
 		// Wait: esperamos que se cargue la lista de opciones
 		UtilWaits.waitSeconds(2);
 
+		String xpathOpts = "//androidx.compose.ui.platform.ComposeView/android.view.View/android.view.View/android.view.View[1]";
+		String xpathOptsElems = xpathOpts + "/android.view.View";
+
 		// Wait
-		UtilWaits.waitUntilVisible(adriver, AppiumBy.xpath(xpathOpts), 4);
+		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathOpts));
 
 		// Action
 		List<WebElement> optDestinos = adriver.findElements(AppiumBy.xpath(xpathOptsElems));
@@ -280,6 +280,8 @@ public class BuscarHotelPage extends BasePage {
 	}
 
 	public void buscamosHoteles() {
+		UtilWaits.waitSeconds(2);
+
 		String xpathContentCompose = "//androidx.compose.ui.platform.ComposeView";
 		String xpathSearchContainer = xpathContentCompose
 				+ "/android.view.View/android.widget.ScrollView/android.view.View[1]";

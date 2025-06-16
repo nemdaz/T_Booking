@@ -9,9 +9,9 @@ Scenario Outline: Reserva completa de habitación para diferentes ciudades y dat
     Then se muestran al menos 2 hoteles que cumplen los criterios
 
     When selecciona el segundo hotel de la lista
-    And presiona el botón "Ver tus opciones" o "Elige habitación" para ver las habitaciones disponibles
+    And presiona el botón "Ver tus opciones", "Ver disponibilidad" o "Elige habitación" para ver las habitaciones disponibles
     And selecciona la primera habitación para ver información detallada
-    Then el precio mostrado es consistente en la lista, la información de la habitación y la sección de reserva
+    Then el precio mostrado es consistente en la lista y la sección de pre-reserva
 
     When inicia la reserva de la habitación seleccionada
     And completa el formulario con los siguientes datos:

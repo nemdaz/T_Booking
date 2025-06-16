@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-
 import io.appium.java_client.AppiumBy;
 import utils.UtilWaits;
 
@@ -18,12 +17,15 @@ public class ListaHotelesPage extends BasePage {
 	}
 
 	public List<String> listaResultadoHoteles() {
+		UtilWaits.waitSeconds(2);
 
 		// Vars
-		String xpathContResults = "//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/androidx.compose.ui.platform.ComposeView";
+		String xpathContResults = "//android.widget.FrameLayout/androidx.compose.ui.platform.ComposeView";
+		//String selContResult = "new UiSelector().className(\"androidx.compose.ui.platform.ComposeView\")";
 
 		// Wait: Esperar que se muestre la lista de hoteles
 		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathContResults));
+		//UtilWaits.waitUntilFound(adriver, AppiumBy.androidUIAutomator(selContResult));
 
 		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
 		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
@@ -53,18 +55,20 @@ public class ListaHotelesPage extends BasePage {
 	}
 
 	public void seleccionaHotel() {
+		UtilWaits.waitSeconds(1);
 
 		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
 		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
 		String xpathListaHoteles = "//android.view.View[@content-desc]";
-		WebElement containerResultados = adriver.findElement(AppiumBy.xpath(xpathContenedorResultados));
+
+		WebElement containerResultados = adriver.findElementUntilFound(AppiumBy.xpath(xpathContenedorResultados));
 		List<WebElement> listaHoteles = containerResultados.findElements(AppiumBy.xpath(xpathListaHoteles));
 
 		int finalPosition = (this.seleccionaPos + this.cantNoHoteles) - 1;
-		System.out.printf("Selecciona hotel, posicion final (%s + %s - 1) : %s\n", this.seleccionaPos,
-				this.cantNoHoteles, finalPosition);
+		System.out.printf("> Selecciona hotel en posicion: %s\n", finalPosition);
 
 		WebElement hotel = listaHoteles.get(finalPosition);
+		System.out.println("> Hotel seleccionado: " + hotel.getAttribute("content-desc"));
 		hotel.click();
 
 	}
@@ -81,7 +85,8 @@ public class ListaHotelesPage extends BasePage {
 	}
 
 	public void muestraHabitacionesHotel(List<String> nombreBotonesParaMostrar) {
-		WebElement boton = adriver.findElement(AppiumBy.id("com.booking:id/select_room_cta"));
+		UtilWaits.waitSeconds(1);
+		WebElement boton = adriver.findElementUntilFound(AppiumBy.id("com.booking:id/select_room_cta"));
 
 		for (String txtBtn : nombreBotonesParaMostrar) {
 			if (boton.getText().contains(txtBtn) || txtBtn.contains(boton.getText())) {

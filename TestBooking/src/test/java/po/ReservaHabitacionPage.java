@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import io.appium.java_client.AppiumBy;
+import utils.UtilWaits;
 import utils.Utils;
 
 public class ReservaHabitacionPage extends BasePage {
@@ -33,78 +34,79 @@ public class ReservaHabitacionPage extends BasePage {
 	}
 
 	public void iniciamosReserva(String btnAction) {
+		UtilWaits.waitSeconds(1);
 		System.out.println("Iniciamos proceso de reserva");
 
-		List<WebElement> botones = adriver.findElements(AppiumBy.className("android.widget.Button"));
-		for (WebElement btn : botones) {
-			System.out.print("\nBotones: " + btn.getText());
-			if (btn.getText().contains(btnAction) || btnAction.contains(btn.getText())) {
-				System.out.print(" ... Click");
-				btn.click();
-				break;
-			}
-		}
+		String selectorReserva = "new UiSelector().resourceId(\"com.booking:id/room_list_action_bar_compose\")";
+		WebElement nodoReserva = adriver.findElementUntilFound(AppiumBy.androidUIAutomator(selectorReserva));
+		List<WebElement> botones = nodoReserva.findElements(AppiumBy.className("android.widget.Button"));
+		botones.get(0).click();
 	}
 
 	public void ingresamosDatosReserva() {
 		System.out.println("Ingresamos los datos de reserva");
+
+		UtilWaits.waitSeconds(1);
+
+		// Esperamos que se cargue el formulario de reserva
+		String selectorFormulario = "new UiSelector().resourceId(\"com.booking:id/bp_content\")";
+		WebElement formulario = adriver.findElementUntilFound(AppiumBy.androidUIAutomator(selectorFormulario));
+
 		// Nombre
-		WebElement nombreEle = adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_firstname_value"));
-		WebElement nombreIpt = nombreEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
-		// nombreIpt.sendKeys(this.cliNombres); // No funciona, input seguros por codigo
-		// del APK
+		String selectorNombre = "//android.widget.EditText[.//android.widget.TextView[contains(@text, 'Nombre')]]";
+		WebElement nombreIpt = formulario.findElement(AppiumBy.xpath(selectorNombre));
 		nombreIpt.click(); // Open keyboard
+		UtilWaits.waitSeconds(1);
 		new Actions(adriver).sendKeys(this.cliNombres).perform();
 		// if(adriver.isKeyboardShown()) adriver.hideKeyboard();
 
 		// Apellidos
-		WebElement apellidoEle = adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_lastname_value"));
-		WebElement apellidoIpt = apellidoEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
+		String selectorApellido = "//android.widget.EditText[.//android.widget.TextView[contains(@text, 'Apellido')]]";
+		WebElement apellidoIpt = formulario.findElement(AppiumBy.xpath(selectorApellido));
 		apellidoIpt.click();
+		UtilWaits.waitSeconds(1);
 		new Actions(adriver).sendKeys(this.cliApellidos).perform();
 		// adriver.hideKeyboard();
 
 		// EMail
-		WebElement emailEle = adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_email_value"));
-		WebElement emailIpt = emailEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
+		String selectorEmail = "//android.widget.EditText[.//android.widget.TextView[contains(@text, 'E-mail')]]";
+		WebElement emailIpt = formulario.findElement(AppiumBy.xpath(selectorEmail));
 		emailIpt.click();
+		UtilWaits.waitSeconds(1);
 		new Actions(adriver).sendKeys(this.cliCorreoE).perform();
 		// adriver.hideKeyboard();
 
-		// Pais-Region
-		// WebElement paregEle =
-		// adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_country_value"));
-		// WebElement paregIpt =
-		// paregEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
-		// paregIpt.click();
-		// paregIpt.clear();
-		/*
-		 * int cntback = paregIpt.getText().length();
-		 * for (int i = 0; i < cntback; i++) {
-		 * System.out.println("Key back ...");
-		 * adriver.pressKey(new KeyEvent());
-		 * }
-		 */
-		// new Actions(adriver).sendKeys(this.cliPaisRegion).perform();
-		// adriver.hideKeyboard();
+		// Pais/Region
+		// Ya está seleccionado por defecto, no se cambia
 
 		// Telefono
-		WebElement telefoEle = adriver.findElement(AppiumBy.id("com.booking:id/bstage1_contact_telephone_value"));
-		WebElement telefoIpt = telefoEle.findElement(AppiumBy.id("com.booking:id/bui_input_container_content"));
+		String selectorTelefono = "//android.widget.EditText[.//android.widget.TextView[contains(@text, 'Teléfono')]]";
+		WebElement telefoIpt = formulario.findElement(AppiumBy.xpath(selectorTelefono));
 		telefoIpt.click();
+		UtilWaits.waitSeconds(1);
 		new Actions(adriver).sendKeys(this.cliNumTelf).perform();
 		// adriver.hideKeyboard();
+		if (adriver.isKeyboardShown())
+			adriver.hideKeyboard();
+
+		// Scroll
+		String uiEventScroll = "new UiScrollable(new UiSelector().scrollable(true)).scrollForward()";
+		adriver.findElement(AppiumBy.androidUIAutomator(uiEventScroll));
+		UtilWaits.waitSeconds(1);
 
 		// Motivo
-		List<WebElement> propoGroupEle = adriver.findElements(AppiumBy.id("com.booking:id/business_purpose_container"));
+		String xpathContMotivo = "//android.view.View[android.widget.TextView[contains(@text, 'el motivo')]]/android.view.View";
+		List<WebElement> propoGroupEle = adriver.findElementsUntilFound(AppiumBy.xpath(xpathContMotivo));
+
 		for (WebElement propoElement : propoGroupEle) {
-			System.out.printf("Motivo [%s]: Click en radio button coincidente ... ", this.cliProposito);
-			if (this.cliProposito.contains(propoElement.getText())
-					|| propoElement.getText().contains(this.cliProposito)) {
-				if (propoElement.getAttribute("checked") != "true") {
-					propoElement.click();
-					System.out.print("Click\n");
-				}
+
+			System.out.printf("> Motivo [%s] ", this.cliProposito);
+			String xpathOpt = "//android.widget.TextView";
+			WebElement option = propoElement.findElement(AppiumBy.xpath(xpathOpt));
+			System.out.printf("> Opción encontrada: %s ", option.getText());
+			if (option.getText().contains(this.cliProposito)) {
+				option.click();
+				System.out.printf("> Click()\n");
 				break;
 			}
 		}
@@ -112,10 +114,12 @@ public class ReservaHabitacionPage extends BasePage {
 	}
 
 	public Double muestraInformacionReserva() {
+		UtilWaits.waitSeconds(1);
 
-		WebElement nodeReserva = adriver
-				.findElement(AppiumBy.id("com.booking:id/informative_click_to_action_container"));
-		WebElement priceHab = nodeReserva.findElement(AppiumBy.id("com.booking:id/title"));
+		String selectorReserva = "//androidx.compose.ui.platform.ComposeView[@resource-id=\"com.booking:id/bp_content\"]/android.view.View/android.view.View/android.view.View[2]";
+		WebElement nodeReserva = adriver.findElementUntilFound(AppiumBy.xpath(selectorReserva));
+		String selectorPrecio = "//android.view.View/android.widget.TextView[contains(@content-desc, \"Precio actual\")]";
+		WebElement priceHab = nodeReserva.findElement(AppiumBy.xpath(selectorPrecio));
 
 		String strPrice = priceHab.getText();
 		List<Double> nums = Utils.numbersFromString(strPrice);
@@ -131,21 +135,26 @@ public class ReservaHabitacionPage extends BasePage {
 	}
 
 	public void comprobamosDetalleReserva(String btnTexto) {
-		WebElement infoContainer = adriver
-				.findElement(AppiumBy.id("com.booking:id/informative_click_to_action_container"));
-		WebElement nextAction = infoContainer.findElement(AppiumBy.id("com.booking:id/action_button"));
-		if (nextAction.getText().trim().contains(btnTexto) || btnTexto.contains(nextAction.getText().trim())) {
+		UtilWaits.waitSeconds(1);
+
+		String selectorContainer = "//androidx.compose.ui.platform.ComposeView[@resource-id=\"com.booking:id/bp_content\"]/android.view.View/android.view.View/android.view.View[2]";
+		WebElement infoContainer = adriver.findElement(AppiumBy.xpath(selectorContainer));
+		String selectorNext = "//android.view.View/android.widget.TextView[contains(@text, \"%s\")]"
+				.formatted(btnTexto);
+		WebElement nextAction = infoContainer.findElement(AppiumBy.xpath(selectorNext));
+		if (nextAction != null)
 			nextAction.click();
-		}
 	}
 
 	public void comprobamosResumenReserva(String btnTexto) {
-		WebElement infoContainer = adriver
-				.findElement(AppiumBy.id("com.booking:id/informative_click_to_action_container"));
-		WebElement nextAction = infoContainer.findElement(AppiumBy.id("com.booking:id/action_button"));
-		if (nextAction.getText().trim().contains(btnTexto) || btnTexto.contains(nextAction.getText().trim())) {
+		UtilWaits.waitSeconds(1);
+
+		String selectorCont = "//androidx.compose.ui.platform.ComposeView[@resource-id=\"com.booking:id/bp_bottom_bar_compose_view\"]/android.view.View/android.view.View/android.view.View[2]";
+		WebElement infoContainer = adriver.findElement(AppiumBy.xpath(selectorCont));
+		String selectorNext = "//android.widget.TextView[contains(@text, \"%s\")]".formatted(btnTexto);
+		WebElement nextAction = infoContainer.findElement(AppiumBy.xpath(selectorNext));
+		if (nextAction != null)
 			nextAction.click();
-		}
 	}
 
 }

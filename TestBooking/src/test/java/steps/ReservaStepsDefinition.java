@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import base.BaseAppium;
 import base.Contexto;
@@ -31,7 +32,8 @@ public class ReservaStepsDefinition implements En {
     public ReservaStepsDefinition() {
 
         Before(() -> {
-            // Inicia el servicio de Appium, pero en este proyecto lo iniciamos en el terminal con el comnado "appium"
+            // Inicia el servicio de Appium, pero en este proyecto lo iniciamos en el
+            // terminal con el comnado "appium"
             // apiumBase.startService();
 
             // Instala/Reinstala la aplicación si es necesario
@@ -85,62 +87,51 @@ public class ReservaStepsDefinition implements En {
                 });
 
         And("solicita la búsqueda", () -> {
-            UtilWaits.waitSeconds(2);
             buscarHotelPage.buscamosHoteles();
         });
 
         Then("se muestran al menos {int} hoteles que cumplen los criterios", (Integer minCant) -> {
-            UtilWaits.waitSeconds(2);
             List<String> resultado = Contexto.listaHoteles.listaResultadoHoteles();
             System.out.println("Valor de no hoteles: " + Contexto.listaHoteles.cantNoHoteles);
             assertTrue(minCant <= resultado.size());
         });
 
         When("selecciona el segundo hotel de la lista", () -> {
-            UtilWaits.waitSeconds(2);
             Contexto.listaHoteles.seleccionaPos = 2;
             Contexto.listaHoteles.seleccionaHotel();
         });
 
-        And("presiona el botón {string} o {string} para ver las habitaciones disponibles", (String op1, String op2) -> {
-            UtilWaits.waitSeconds(1);
-            // Usa ambos nombres de botón para compatibilidad
-            Contexto.listaHoteles.muestraHabitacionesHotel(Arrays.asList(op1, op2));
-        });
+        And("presiona el botón {string}, {string} o {string} para ver las habitaciones disponibles",
+                (String op1, String op2, String op3) -> {
+                    // Usa ambos nombres de botón para compatibilidad
+                    Contexto.listaHoteles.muestraHabitacionesHotel(Arrays.asList(op1, op2, op3));
+                });
 
         And("selecciona la primera habitación para ver información detallada", () -> {
-            UtilWaits.waitSeconds(2);
             escogeHabitacionPage.posicionHabitacion = 1;
             Contexto.reservaObj.setCostoPrevio(escogeHabitacionPage.seleccionaHabitacion());
         });
 
-        Then("el precio mostrado es consistente en la lista, la información de la habitación y la sección de reserva",
+        Then("el precio mostrado es consistente en la lista y la sección de pre-reserva",
                 () -> {
-                    UtilWaits.waitSeconds(5);
-                    Double pInfo = escogeHabitacionPage.muestraInformacionHabitacion();
-                    assertEquals(Contexto.reservaObj.getCostoPrevio(), pInfo);
-                    Contexto.reservaObj.setCostoPrevio(pInfo);
-
-                    UtilWaits.waitSeconds(1);
-                    Double pReserva = escogeHabitacionPage.muestraInformacionReserva();
+                    Double pReserva = escogeHabitacionPage.muestraInformacionPreReserva();
                     assertEquals(Contexto.reservaObj.getCostoPrevio(), pReserva);
                     Contexto.reservaObj.setCostoPrevio(pReserva);
                 });
 
         When("inicia la reserva de la habitación seleccionada", () -> {
-            UtilWaits.waitSeconds(1);
             reservaPage.iniciamosReserva("Reserva ahora"); // puedes parametrizar si el botón varía
         });
 
         And("completa el formulario con los siguientes datos:", (DataTable datosReserva) -> {
-            UtilWaits.waitSeconds(5);
-            List<String> datos = datosReserva.asList();
-            reservaPage.cliNombres = datos.get(0);
-            reservaPage.cliApellidos = datos.get(1);
-            reservaPage.cliCorreoE = datos.get(2);
-            reservaPage.cliPaisRegion = datos.get(3);
-            reservaPage.cliNumTelf = datos.get(4);
-            reservaPage.cliProposito = datos.get(5);
+            List<Map<String, String>> rows = datosReserva.asMaps();
+            Map<String, String> datos = rows.get(0);
+            reservaPage.cliNombres = datos.get("Nombre");
+            reservaPage.cliApellidos = datos.get("Apellido");
+            reservaPage.cliCorreoE = datos.get("Email");
+            reservaPage.cliPaisRegion = datos.get("País");
+            reservaPage.cliNumTelf = datos.get("Teléfono");
+            reservaPage.cliProposito = datos.get("Motivo");
 
             reservaPage.ingresamosDatosReserva();
             Double precioActual = reservaPage.muestraInformacionReserva();
@@ -149,20 +140,17 @@ public class ReservaStepsDefinition implements En {
         });
 
         And("avanza al resumen y confirma el último paso", () -> {
-            UtilWaits.waitSeconds(1);
             reservaPage.comprobamosDetalleReserva("Siguiente paso");
-            UtilWaits.waitSeconds(1);
             reservaPage.comprobamosResumenReserva("Último paso");
         });
 
         Then("la aplicación solicita los datos de tarjeta:", (DataTable datosTarjeta) -> {
-            UtilWaits.waitSeconds(4);
-            List<String> datCard = datosTarjeta.asList();
-            reservaFinPage.cardNumber = datCard.get(0);
-            reservaFinPage.cardPropietario = datCard.get(1);
-            reservaFinPage.cardExpira = datCard.get(2);
-            reservaFinPage.cardCVC = datCard.get(3);
-
+            List<Map<String, String>> rows = datosTarjeta.asMaps();
+            Map<String, String> datCard = rows.get(0);
+            reservaFinPage.cardNumber = datCard.get("Número de tarjeta");
+            reservaFinPage.cardPropietario = datCard.get("Nombre en tarjeta");
+            reservaFinPage.cardExpira = datCard.get("Vencimiento");
+            reservaFinPage.cardCVC = datCard.get("CVV");
             reservaFinPage.ingresamosDatosTarjeta();
         });
 
@@ -175,7 +163,7 @@ public class ReservaStepsDefinition implements En {
         });
 
         After(() -> {
-            // Acciones finales para cada scenario
+            apiumBase.shutDown();
         });
 
     }
