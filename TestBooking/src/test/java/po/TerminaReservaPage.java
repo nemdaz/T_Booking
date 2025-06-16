@@ -25,6 +25,7 @@ public class TerminaReservaPage extends BasePage {
 
 	public void ingresamosDatosTarjeta() {
 		UtilWaits.waitSeconds(4);
+
 		System.out.println("Ingresamos los datos de la Tarjeta");
 
 		// Numero

@@ -1,6 +1,7 @@
 package base;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -15,17 +16,17 @@ public class BaseAppium {
 	public static AppiumDriverLocalService aservice;
 	public static AndroidDriverX adriver;
 	protected DesiredCapabilities cap;
-	protected String IP;
-	protected Integer PORT;
+	protected static String APPIUM_IP = "127.0.0.1";
+	protected static Integer APPIUM_PORT = 4723;
+	protected static Boolean APPIUM_SERVER_LOCAL = true; // You need start manually 'appium' command in terminal
 
 	public BaseAppium() {
-		IP = "127.0.0.1";
-		PORT = 4723;
 		//
 		cap = new DesiredCapabilities();
 		cap.setCapability("platformName", "Android");
 		cap.setCapability("appium:automationName", "UiAutomator2");
-		cap.setCapability("appium:udid", "ZY22GM3QXD"); // Check your device ID with 'adb devices'
+		// cap.setCapability("appium:udid", "ZY22GM3QXD"); // Your deviece (adb devices)
+		cap.setCapability("appium:udid", "192.168.3.141:5555"); // Same device but wifi connection (adb)
 		cap.setCapability("appium:deviceName", "SmartphoneTest");
 		cap.setCapability("appium:platformVersion", "14.0.0");
 		cap.setCapability("appium:appPackage", "com.booking");
@@ -37,19 +38,52 @@ public class BaseAppium {
 	}
 
 	// START SERVER
-	public void startService() {
-
+	public void startServer() {
+		if (APPIUM_SERVER_LOCAL) {
+			System.out.println(">> APPIUM_SERVER_LOCAL = true (Appium en terminal con comando 'appium')");
+			return;
+		}
 		try {
 			// Service
-			AppiumServiceBuilder abuilder = new AppiumServiceBuilder()// .withCapabilities(cap)
-					.withIPAddress(IP).usingPort(PORT);
+			AppiumServiceBuilder abuilder = new AppiumServiceBuilder()
+					// .withLogFile(new File("logs/appium.log")) // Optional: Log file
+					.withIPAddress(APPIUM_IP)
+					.usingPort(APPIUM_PORT);
+
 			aservice = abuilder.build();
 			aservice.start();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			System.out.println("No se puede inciar el servicio");
+			System.out.println("No se puede iniciar appium server");
 		}
+	}
+
+	// STOP SERVER
+	public void stopServer() {
+		if (APPIUM_SERVER_LOCAL) {
+			return;
+		}
+		if (aservice != null && aservice.isRunning()) {
+			aservice.stop();
+		}
+	}
+
+	// START SERVICE
+	public void startDriver() {
+
+		try {
+			adriver = new AndroidDriverX(new URL("http://" + APPIUM_IP + ":" + APPIUM_PORT), cap);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.out.println("No nos podemos conectar al servicio");
+		}
+
+	}
+
+	public void stopDriver() {
+		if (adriver != null)
+			adriver.quit();
 	}
 
 	// INSTALL APPS
@@ -110,25 +144,6 @@ public class BaseAppium {
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException("Error durante la instalación de la APK: " + e.getMessage(), e);
 		}
-	}
-
-	// START SERVICE
-	public void startDriver() {
-
-		try {
-			// Driver
-			adriver = new AndroidDriverX(new URL("http://" + IP + ":" + PORT), cap);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.out.println("No nos podemos conectar al servicio");
-		}
-
-	}
-
-	public void shutDown() {
-		if (adriver != null)
-			adriver.quit();
 	}
 
 }

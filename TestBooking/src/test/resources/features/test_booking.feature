@@ -8,7 +8,7 @@ Scenario Outline: Reserva completa de habitación para diferentes ciudades y dat
     And solicita la búsqueda
     Then se muestran al menos 2 hoteles que cumplen los criterios
 
-    When selecciona el segundo hotel de la lista
+    When selecciona el 2º hotel con pago adelantado con tarjeta
     And presiona el botón "Ver tus opciones", "Ver disponibilidad" o "Elige habitación" para ver las habitaciones disponibles
     And selecciona la primera habitación para ver información detallada
     Then el precio mostrado es consistente en la lista y la sección de pre-reserva
@@ -20,7 +20,7 @@ Scenario Outline: Reserva completa de habitación para diferentes ciudades y dat
     And avanza al resumen y confirma el último paso
     Then la aplicación solicita los datos de tarjeta:
       | Número de tarjeta    | Nombre en tarjeta          | Vencimiento | CVV |
-      | 4555788765443333     | Maria Rosa Garcia Garcia   | 02/25       | 000 |
+      | 4539148803436467     | Maria Rosa Garcia Garcia   | 12/29       | 123 |
     When confirma la reserva con los datos de pago
     Then la aplicación muestra la confirmación exitosa de la reserva
 

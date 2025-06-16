@@ -40,6 +40,7 @@ public class ReservaStepsDefinition implements En {
             apiumBase.installApp();
 
             // Inicia la sesión de Appium
+            apiumBase.startServer();
             apiumBase.startDriver();
         });
 
@@ -96,9 +97,8 @@ public class ReservaStepsDefinition implements En {
             assertTrue(minCant <= resultado.size());
         });
 
-        When("selecciona el segundo hotel de la lista", () -> {
-            Contexto.listaHoteles.seleccionaPos = 2;
-            Contexto.listaHoteles.seleccionaHotel();
+        When("selecciona el {int}º hotel con pago adelantado con tarjeta", (Integer pos) -> {
+            Contexto.listaHoteles.seleccionaHotel(pos);
         });
 
         And("presiona el botón {string}, {string} o {string} para ver las habitaciones disponibles",
@@ -141,7 +141,7 @@ public class ReservaStepsDefinition implements En {
 
         And("avanza al resumen y confirma el último paso", () -> {
             reservaPage.comprobamosDetalleReserva("Siguiente paso");
-            reservaPage.comprobamosResumenReserva("Último paso");
+            reservaPage.comprobamosResumenReserva("Último paso", "Reserva");
         });
 
         Then("la aplicación solicita los datos de tarjeta:", (DataTable datosTarjeta) -> {
@@ -163,7 +163,8 @@ public class ReservaStepsDefinition implements En {
         });
 
         After(() -> {
-            apiumBase.shutDown();
+            apiumBase.stopDriver();
+            apiumBase.stopServer();
         });
 
     }

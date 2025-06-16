@@ -6,10 +6,10 @@ import java.util.List;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import io.appium.java_client.AppiumBy;
+import utils.UtilLogs;
 import utils.UtilWaits;
 
 public class ListaHotelesPage extends BasePage {
-	public int seleccionaPos;
 	public int cantNoHoteles;
 
 	public ListaHotelesPage() {
@@ -21,11 +21,13 @@ public class ListaHotelesPage extends BasePage {
 
 		// Vars
 		String xpathContResults = "//android.widget.FrameLayout/androidx.compose.ui.platform.ComposeView";
-		//String selContResult = "new UiSelector().className(\"androidx.compose.ui.platform.ComposeView\")";
+		// String selContResult = "new
+		// UiSelector().className(\"androidx.compose.ui.platform.ComposeView\")";
 
 		// Wait: Esperar que se muestre la lista de hoteles
 		UtilWaits.waitUntilFound(adriver, AppiumBy.xpath(xpathContResults));
-		//UtilWaits.waitUntilFound(adriver, AppiumBy.androidUIAutomator(selContResult));
+		// UtilWaits.waitUntilFound(adriver,
+		// AppiumBy.androidUIAutomator(selContResult));
 
 		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
 		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
@@ -54,22 +56,56 @@ public class ListaHotelesPage extends BasePage {
 		return resultadoHoteles;
 	}
 
-	public void seleccionaHotel() {
-		UtilWaits.waitSeconds(1);
+	public void seleccionaHotel(Integer successAssert) {
 
-		// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
-		String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
-		String xpathListaHoteles = "//android.view.View[@content-desc]";
+		System.out.printf("> Selecciona hotel: [%s]\n", successAssert);
+		Integer countAttemps = 0;
+		Integer countAsserts = 0;
+		Integer maxAttemps = 10;
 
-		WebElement containerResultados = adriver.findElementUntilFound(AppiumBy.xpath(xpathContenedorResultados));
-		List<WebElement> listaHoteles = containerResultados.findElements(AppiumBy.xpath(xpathListaHoteles));
+		WebElement successHotel = null;
 
-		int finalPosition = (this.seleccionaPos + this.cantNoHoteles) - 1;
-		System.out.printf("> Selecciona hotel en posicion: %s\n", finalPosition);
+		while (countAttemps <= maxAttemps) {
+			System.out.println("\n> Intento " + (countAttemps) + " de " + maxAttemps + "\n");
+			UtilWaits.waitSeconds(1);
 
-		WebElement hotel = listaHoteles.get(finalPosition);
-		System.out.println("> Hotel seleccionado: " + hotel.getAttribute("content-desc"));
-		hotel.click();
+			// Action: Identificar el contenedor de resultados y obtener la lista de hoteles
+			String xpathContenedorResultados = "//android.view.View[@resource-id=\"sr_list\"]";
+			String xpathListaHoteles = "./android.view.View/android.view.View[@content-desc]";
+
+			WebElement containerResultados = adriver.findElementUntilFound(AppiumBy.xpath(xpathContenedorResultados));
+			List<WebElement> listaHoteles = containerResultados.findElements(AppiumBy.xpath(xpathListaHoteles));
+
+			//System.out.println("\n> Page source del intento: \n");
+			//UtilLogs.printPageSource(adriver);
+
+			for (WebElement hotel : listaHoteles) {
+
+				String hotelText = hotel.getAttribute("content-desc");
+				System.out.printf("\n> Hotel interado: %s\n", hotelText.replaceAll("\\n", ". "));
+				if (!hotelText.contains("Sin pago por adelantado")) {
+					System.out.printf("\n> Hotel coincidente: %s\n", hotelText.replaceAll("\\n", ". "));
+					countAsserts++;
+					if (countAsserts.equals(successAssert)) {
+						successHotel = hotel;
+						System.out.printf("> > Hotel encontrado.\n");
+						break;
+					}
+				}
+			}
+			if (successHotel != null) {
+				break;
+			} else {
+				// Scroll
+				System.out.println("> Hotel no encontrado, intentamos scroll ...");
+				String uiEventScroll = "new UiScrollable(new UiSelector().scrollable(true)).scrollForward()";
+				adriver.findElement(AppiumBy.androidUIAutomator(uiEventScroll));
+			}
+			countAttemps++;
+		}
+
+		System.out.println("> Hotel seleccionado: " + successHotel.getAttribute("content-desc"));
+		successHotel.click();
 
 	}
 

@@ -146,15 +146,25 @@ public class ReservaHabitacionPage extends BasePage {
 			nextAction.click();
 	}
 
-	public void comprobamosResumenReserva(String btnTexto) {
+	public void comprobamosResumenReserva(String... btnTexto) {
 		UtilWaits.waitSeconds(1);
 
 		String selectorCont = "//androidx.compose.ui.platform.ComposeView[@resource-id=\"com.booking:id/bp_bottom_bar_compose_view\"]/android.view.View/android.view.View/android.view.View[2]";
 		WebElement infoContainer = adriver.findElement(AppiumBy.xpath(selectorCont));
-		String selectorNext = "//android.widget.TextView[contains(@text, \"%s\")]".formatted(btnTexto);
-		WebElement nextAction = infoContainer.findElement(AppiumBy.xpath(selectorNext));
-		if (nextAction != null)
-			nextAction.click();
+		// String selectorNext = "//android.widget.TextView[contains(@text,
+		// \"%s\")]".formatted(btnTexto);
+		String selectorNext = "//android.widget.TextView[@text and string-length(@text) > 0]";
+		List<WebElement> nextActions = infoContainer.findElements(AppiumBy.xpath(selectorNext));
+		for (WebElement nextAction : nextActions) {
+			String actionText = nextAction.getText();
+			for (String btn : btnTexto) {
+				if (actionText.contains(btn)) {
+					System.out.printf("> Click en botón: %s\n", btn);
+					nextAction.click();
+					return;
+				}
+			}
+		}
 	}
 
 }
